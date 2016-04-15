@@ -10,3 +10,9 @@ D:\college\semester6\computer project\EOES PROEJCT_Login_Modal\EOES_ClassLib\bin
 D:\college\semester6\computer project\EOES PROEJCT_Login_Modal\EOES_ClassLib\obj\Debug\EOES_ClassLib.csprojResolveAssemblyReference.cache
 D:\college\semester6\computer project\EOES PROEJCT_Login_Modal\EOES_ClassLib\obj\Debug\EOES_ClassLib.dll
 D:\college\semester6\computer project\EOES PROEJCT_Login_Modal\EOES_ClassLib\obj\Debug\EOES_ClassLib.pdb
+D:\Centennialcollege\5 Semester\Computer Programmer Proj\Final Projec\EOES\EOES_ClassLib\bin\Debug\EOES_ClassLib.dll
+D:\Centennialcollege\5 Semester\Computer Programmer Proj\Final Projec\EOES\EOES_ClassLib\bin\Debug\EOES_ClassLib.pdb
+D:\Centennialcollege\5 Semester\Computer Programmer Proj\Final Projec\EOES\EOES_ClassLib\bin\Debug\MySql.Data.dll
+D:\Centennialcollege\5 Semester\Computer Programmer Proj\Final Projec\EOES\EOES_ClassLib\obj\Debug\EOES_ClassLib.csprojResolveAssemblyReference.cache
+D:\Centennialcollege\5 Semester\Computer Programmer Proj\Final Projec\EOES\EOES_ClassLib\obj\Debug\EOES_ClassLib.dll
+D:\Centennialcollege\5 Semester\Computer Programmer Proj\Final Projec\EOES\EOES_ClassLib\obj\Debug\EOES_ClassLib.pdb

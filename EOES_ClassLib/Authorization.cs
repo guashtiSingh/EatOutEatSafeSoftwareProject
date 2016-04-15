@@ -134,7 +134,7 @@ namespace EOES_ClassLib
             Param.Add("email", email);
             Param.Add("role", role);
 
-            DataSet ds = con.SelectProcWithParam("SignupUser", Param);
+            DataSet ds = con.SelectProcWithParam("SingupUser", Param);
             DataTable dt = ds.Tables[0];
 
             if (dt.Rows[0][0].ToString() == "1")

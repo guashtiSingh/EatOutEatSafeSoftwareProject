@@ -63,5 +63,33 @@ namespace EOES_UnitTest
             DataRow[] dr = ds.Tables[0].Select("[Img_Name] = 'SneakyDees-03.jpg'");
             Assert.AreEqual(1, dr.Length);
         }
+
+        [TestMethod]
+        public void AllergyResListTest()
+        {
+            //arrange
+            Restaurants r = new Restaurants();
+
+            //act
+            DataSet ds = r.AllergyResList("corn");
+
+            //assert
+            DataRow[] dr = ds.Tables[0].Select("[AC_Name] = '%corn%'");
+            Assert.AreEqual(1, dr.Length);
+        }
+
+        [TestMethod]
+        public void LocationResListTest()
+        {
+            //arrange
+            Restaurants r = new Restaurants();
+
+            //act
+            DataSet ds = r.LocationResList("toronto");
+
+            //assert
+            DataRow[] dr = ds.Tables[0].Select("[LC_Name] = '%toronto%'");
+            Assert.AreEqual(1, dr.Length);
+        }
     }
 }

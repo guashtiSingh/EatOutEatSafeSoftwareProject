@@ -14,18 +14,51 @@ namespace EOES_UnitTest
             Authorization au = new Authorization();
 
             //act
-            UserDetail ud = au.userDetail("1");
+            UserDetail ud = au.userDetail("zxcv");
 
             //assert (will complete after user authorization developed.)
             UserDetail e_ud = new UserDetail();
-            e_ud.FirstName = "";
-            e_ud.LastName = "";
-            e_ud.Email = "";
-            e_ud.Password = "";
-            e_ud.UserId = "";
-            e_ud.UcID = 0;
+            e_ud.FirstName = "Joanna";
+            e_ud.LastName = "Seo";
+            e_ud.Email = "Joanna@gmail.com";
+            e_ud.Password = "1234";
+            e_ud.UserId = "zxcv";
+            e_ud.UcID = 2;
 
             Assert.AreEqual(e_ud, ud);
+        }
+
+        [TestMethod]
+        public void userLoginTest()
+        {
+            //arrange
+            Authorization au = new Authorization();
+
+            //act
+            UserDetail ud = au.userLogin("zxcv", "1234");
+
+            //assert (will complete after user authorization developed.)
+            UserDetail e_ud = new UserDetail();
+            e_ud.FirstName = "Joanna";
+            e_ud.LastName = "Seo";
+            e_ud.Email = "Joanna@gmail.com";
+            e_ud.Password = "1234";
+            e_ud.UserId = "zxcv";
+            e_ud.UcID = 2;
+
+            Assert.AreEqual(e_ud, ud);
+        }
+
+        [TestMethod]
+        public void insertUserTest()
+        {
+            //arrange
+            Authorization au = new Authorization();
+
+            //act
+            bool isSuccess = au.insertUser("UnitTest", "Unit", "test", "1234", "unit@gmail.com", "2");
+
+            Assert.AreEqual(isSuccess, true);
         }
     }
 }

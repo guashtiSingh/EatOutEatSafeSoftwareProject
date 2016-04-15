@@ -1,0 +1,8 @@
+D:\Centennialcollege\5 Semester\Computer Programmer Proj\Final Projec\EOES\EOES_UnitTest\bin\Debug\EOES_UnitTest.dll
+D:\Centennialcollege\5 Semester\Computer Programmer Proj\Final Projec\EOES\EOES_UnitTest\bin\Debug\EOES_UnitTest.pdb
+D:\Centennialcollege\5 Semester\Computer Programmer Proj\Final Projec\EOES\EOES_UnitTest\bin\Debug\EOES_ClassLib.dll
+D:\Centennialcollege\5 Semester\Computer Programmer Proj\Final Projec\EOES\EOES_UnitTest\bin\Debug\MySql.Data.dll
+D:\Centennialcollege\5 Semester\Computer Programmer Proj\Final Projec\EOES\EOES_UnitTest\bin\Debug\EOES_ClassLib.pdb
+D:\Centennialcollege\5 Semester\Computer Programmer Proj\Final Projec\EOES\EOES_UnitTest\obj\Debug\EOES_UnitTest.csprojResolveAssemblyReference.cache
+D:\Centennialcollege\5 Semester\Computer Programmer Proj\Final Projec\EOES\EOES_UnitTest\obj\Debug\EOES_UnitTest.dll
+D:\Centennialcollege\5 Semester\Computer Programmer Proj\Final Projec\EOES\EOES_UnitTest\obj\Debug\EOES_UnitTest.pdb
