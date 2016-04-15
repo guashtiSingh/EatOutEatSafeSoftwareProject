@@ -1,0 +1,132 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/bootstrap.css" />
+    <link href="/css/docs.min.css" rel="stylesheet"/>
+    <script src="https://code.jquery.com/jquery.js"></script>    
+     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/tooltip.js"></script>
+    <script src="/js/login.js"></script>
+   
+    <asp:ContentPlaceHolder id="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <input type="hidden" id="errMsg" />
+
+        <!-- top navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="/" class="navbar-brand">EatOutEatSafe</a>
+            </div>
+            <div class="navbar-collapse collapse"> 
+                <ul class="nav navbar-nav">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/contact/ContactUs.aspx">Contact</a></li>
+                </ul>
+                
+                <div class="nav navbar-nav navbar-right">
+                    
+                   <div style="padding-top:8px;">
+                      <!------------------ BEGIN SUBNAV ------------------> 
+                  
+                    <asp:MultiView ID="MultiView1" runat="server" ActiveViewIndex="0">
+                    
+                        <!------------------ Before login ------------------> 
+                        <asp:View ID="loginView" runat="server">
+                            <a class="btn btn-default" data-toggle="modal" data-target="#loginModal">Login</a>
+                            <a href="/users/Signup.aspx" class="btn btn-primary" role="button">Sign up</a>
+                        </asp:View>
+                        
+                        <!------------------ After login ------------------> 
+                        <asp:View ID="logoutView" runat="server">
+                            <span style="color:yellowgreen;" class="glyphicon glyphicon-user" aria-hidden="true"></span>                        
+                            <span style="color:yellowgreen;" class="">Welcome! 
+                                    <asp:Label ID="userName" runat="server"></asp:Label>
+
+                            </span> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a id="logout" href="#" runat="server" class="btn btn-danger" onServerClick="btnLogout_Click">Logout</a>
+                        </asp:View>
+                    
+                    </asp:MultiView>
+                    
+                         <!------------------ END SUBNAV ------------------> 
+
+                         <!------------------ END TOP NAV ------------------> 
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div>
+
+        <!-- Modal -->
+        <div id="loginModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">User Login</h4>
+                </div>
+                <div class="modal-body">
+                            
+                    <div class="form-wrap">
+                        <div class="form-group">
+                            <input type="text" id="userId" placeholder="User ID" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="pwd" class="form-control" placeholder="Password" />                                        
+                        </div>
+                        <input type="button" id="btnLogin" class="btn btn-custom btn-lg btn-block" value="Login"/>
+        	        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnLoginClose" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+            </div>
+        </div>
+        <!-- Modal -->
+
+        <form class="form-horizontal" runat="server" ID="form1">
+             <div>
+                <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+        
+                </asp:ContentPlaceHolder>
+            </div>
+        </form>
+    </div>
+    
+
+        <!-- footer -->
+    <footer class="bs-docs-footer" role="contentinfo">
+        <div class="container">
+            <ul class="bs-docs-footer-links">
+                <li><a href="https://www.facebook.com/">Facebook</a></li>
+                <li><a href="https://twitter.com/">Twitter</a></li> 
+                <li><a href="/contact/ContactUs.aspx">Contact US</a></li>
+            </ul> 
+            <p>Designed and built with all the love in the world by Eat Out Eat Safe Inc.</p> 
+        </div> 
+    </footer> 
+</body>
+</html>

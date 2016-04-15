@@ -1,0 +1,107 @@
+﻿body {
+}
+
+.content {
+}
+
+.search {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 25%;
+    max-width: 900px;
+}
+
+.search_ico {
+    width: 20px;
+    float: right;    
+}
+
+.re_tab{
+    width: 33%;
+    text-align: center;
+}
+
+.searchBar{
+    margin: auto;
+    max-width: 900px;
+}
+
+#searchDiv {
+    cursor: pointer;
+}
+
+.checkbox-group{
+    color: #111111;
+    text-shadow:#fff 0 0 10px;
+}
+
+.list_img {
+    width: 150px;
+}
+
+.caption h4 {
+    <!--white-space: nowrap;-->
+}
+
+.thumbnail > img {
+    max-width: 350px !important;
+    height: 250px !important;
+}
+
+.ratings {
+    padding-right: 10px;
+    padding-left: 10px;
+    color: #d17581;
+}
+
+.categoryTitle{
+    text-align: left !important;
+}
+
+.keyword {
+    color: #d17581;
+}
+
+.table-responsive {
+    overflow-x: hidden !important;
+}
+
+.thumbnail .caption-full {
+    padding: 9px;
+    color: #333;
+}
+
+.ico {  
+    width: 23px;
+    border: none;
+    vertical-align: middle;  
+}
+
+.menuList > td {
+    vertical-align: middle !important;
+}
+
+a img:hover  {  
+    opacity: 0.8;
+}   
+
+.mapTooltip + .tooltip.right .tooltip-inner {
+    background-color: #FFFFFF;
+    max-width: 350px; 
+}
+.mapTooltip + .tooltip.right .tooltip-arrow  {
+    border-right-color: #FFFFFF !important;
+}
+
+.tooltip .tooltip-inner {
+    max-width: 350px; 
+}
+
+.footer {
+    text-align:center;
+}
+
+.contactus {
+    margin-top: 50px;
+    min-height: 500px;
+}
