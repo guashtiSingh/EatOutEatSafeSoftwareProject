@@ -78,34 +78,30 @@ public partial class restaurants_ResDetails : System.Web.UI.Page
     }
 
 
+
     protected void btnSubmit_Click(object sender, EventArgs e)
     {
-        //Response.Write("<script>alert('Error! Please try again');</script>");
 
-        HttpCookie myCookie = new HttpCookie("userInfo");
-        myCookie["userId"] = "zxcv";
-
-        //if (Convert.ToString(Request.Cookies["userInfo"]) != "")
-        if ("zxcv" == "zxcv")
+        //Check if user login
+        if (Convert.ToString(Request.Cookies["userInfo"]) != "")
         {
-
-            //string userID = Request.Cookies["userInfo"]["userId"];
-            string userID = "zxcv";
+            string userID = Request.Cookies["userInfo"]["userId"];
             string title = reviewTitle.Text;
             string content = reviewContent.Text;
             string rate = reviewRate.SelectedValue.ToString();
+            bool isSuccess = false;
 
-            bool isSuccess = rv.InsertReview(Res_Id, title, content, userID, "", "", rate);
+            isSuccess = rv.InsertReview(Res_Id, title, content, userID, "", "", rate);
 
             if (isSuccess)
             {
                 reviewTitle.Text = string.Empty;
                 reviewContent.Text = string.Empty;
-
-                upnelList.Update();
                 getReview(Res_Id);
+                upnelList.Update();
             }
-            else { Response.Write("<script>alert('No insert');</script>"); }
+            else
+                Response.Write("<script>alert('Error!');</script>");
 
         }
         else
@@ -113,7 +109,6 @@ public partial class restaurants_ResDetails : System.Web.UI.Page
             Response.Write("<script>alert('No login');</script>");
         }
     }
-
     private void getReview(string ResId)
     {
         topReviews.DataSource = rv.GetReviews(ResId, "1");
