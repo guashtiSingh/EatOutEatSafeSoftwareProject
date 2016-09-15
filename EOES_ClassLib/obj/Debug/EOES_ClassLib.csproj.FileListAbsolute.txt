@@ -16,3 +16,4 @@ D:\Centennialcollege\5 Semester\Computer Programmer Proj\Final Projec\EOES\EOES_
 D:\Centennialcollege\5 Semester\Computer Programmer Proj\Final Projec\EOES\EOES_ClassLib\obj\Debug\EOES_ClassLib.csprojResolveAssemblyReference.cache
 D:\Centennialcollege\5 Semester\Computer Programmer Proj\Final Projec\EOES\EOES_ClassLib\obj\Debug\EOES_ClassLib.dll
 D:\Centennialcollege\5 Semester\Computer Programmer Proj\Final Projec\EOES\EOES_ClassLib\obj\Debug\EOES_ClassLib.pdb
+D:\Centennialcollege\5 Semester\Computer Programmer Proj\Final Projec\EOES\EOES_ClassLib\bin\Debug\MySql.Data.xml
