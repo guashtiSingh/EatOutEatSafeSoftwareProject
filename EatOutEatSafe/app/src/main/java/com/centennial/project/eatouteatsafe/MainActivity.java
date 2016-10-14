@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
     }
-
+    // calling the list activity in button click
     public void callListRestaurentActivity(View mainView){
         Intent listIntent = new Intent (this, ListRestaurantsActivity.class);
 
