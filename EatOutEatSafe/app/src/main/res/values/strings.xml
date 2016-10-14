@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">EatOut|EatSafe</string>
+    <string-array name="titles_res_listPage">
+        <item>Popular Restaurants</item>
+        <item>Restaurants - Allergy</item>
+        <item>Restaurants - Location</item>
+        <item>Restaurants not known</item>
+    </string-array>
+</resources>
