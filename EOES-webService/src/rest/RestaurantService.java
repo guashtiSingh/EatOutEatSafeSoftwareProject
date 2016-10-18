@@ -3,6 +3,7 @@ package rest;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 import javax.ws.rs.GET;
@@ -16,10 +17,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import conf.dbConnection;
+import conf.JSONGenerator;
  
 @Path("/restaurant")
 public class RestaurantService {
  
+	JSONGenerator jg = null;
+	
 	  @GET
 	  @Produces("application/json")
 	  public Response RestaurantService() throws JSONException {
@@ -30,26 +34,17 @@ public class RestaurantService {
 		CallableStatement cs = null;
 		ResultSet rs = null;
 		
+		
 		try{
 			dbConnection db = new dbConnection();
 			con = db.getConnection();
 			
 			cs = con.prepareCall("call PopularResList()");
 			rs = cs.executeQuery();
-		
-			JSONObject jsonObject;
-			while(rs.next()){
-				jsonObject = new JSONObject();
-				jsonObject.put("Res_Id", rs.getString("Res_Id"));
-				jsonObject.put("Res_Name", rs.getString("Res_Name"));
-				jsonObject.put("Res_Description", rs.getString("Res_Description"));
-				jsonObject.put("MainImg_Path", rs.getString("MainImg_Path"));
-				jsonObject.put("MainImg_Name", rs.getString("MainImg_Name"));
-				jsonObject.put("Total_review", rs.getString("Total_review"));
-				jsonObject.put("Rate", rs.getString("Rate"));
-				
-				jsonArr.put(jsonObject);
-			}
+			
+			jg = new JSONGenerator();
+			jsonArr = jg.transforJSON(rs);
+			
 				
 		}catch(SQLException se){
 			System.out.println(se.getMessage());			
@@ -91,25 +86,14 @@ public class RestaurantService {
 			}
 			
 			rs = cs.executeQuery();
-		
-			JSONObject jsonObject;
-			while(rs.next()){
-				jsonObject = new JSONObject();
-				jsonObject.put("Res_Id", rs.getString("Res_Id"));
-				jsonObject.put("Res_Name", rs.getString("Res_Name"));
-				jsonObject.put("Res_Description", rs.getString("Res_Description"));
-				jsonObject.put("MainImg_Path", rs.getString("MainImg_Path"));
-				jsonObject.put("MainImg_Name", rs.getString("MainImg_Name"));
-				jsonObject.put("Total_review", rs.getString("Total_review"));
-				jsonObject.put("Rate", rs.getString("Rate"));
-				
-				jsonArr.put(jsonObject);
-			}
+			jg = new JSONGenerator();
+			jsonArr = jg.transforJSON(rs);
+			
 				
 		}catch(SQLException se){
 			System.out.println(se.getMessage());			
 		}catch(Exception e){
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}finally{
 			if(cs != null) try{cs.close();}catch(Exception e){}
 			if(con != null) try{con.close();}catch(Exception e){}
