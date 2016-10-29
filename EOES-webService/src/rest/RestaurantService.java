@@ -39,7 +39,7 @@ public class RestaurantService {
 			dbConnection db = new dbConnection();
 			con = db.getConnection();
 			
-			cs = con.prepareCall("call PopularResList()");
+			cs = con.prepareCall("call ResList()");
 			rs = cs.executeQuery();
 			
 			jg = new JSONGenerator();
@@ -75,21 +75,51 @@ public class RestaurantService {
 			dbConnection db = new dbConnection();
 			con = db.getConnection();
 			
+			if(listDiv.toUpperCase() == "P")
+			{
+				cs = con.prepareCall("call PopularResList()");
+			}
+			else if(listDiv.toUpperCase() == "L")
+			{
+				cs = con.prepareCall("{call LocationResList(?)}");
+				cs.setString("keyword", "");
+			}
+			else if(listDiv.toUpperCase() == "A")
+			{
+				cs = con.prepareCall("{call AllergyResList(?)}");
+				cs.setString("keyword", "");
+			}
+			else
+			{
+				cs = con.prepareCall("{call searchList(?)}");
+				cs.setString("keyword", listDiv);
+			}
+			
+			/*
 			switch (listDiv.toUpperCase())
 			{
 				case "P": //Popular Restaurants
 					cs = con.prepareCall("call PopularResList()");
 					break;
+				case "L": //Categorized Restaurants by Location
+					cs = con.prepareCall("{call LocationResList(?)}");
+					cs.setString("keyword", "");
+					break;
+				case "A": //Categorized Restaurants by Allergy
+					cs = con.prepareCall("{call AllergyResList(?)}");
+					cs.setString("keyword", "");
+					break;
 				default:
 					cs = con.prepareCall("call PopularResList()");
 					break;
-			}
+			}*/
 			
 			rs = cs.executeQuery();
 			jg = new JSONGenerator();
 			jsonArr = jg.transforJSON(rs);
+			cs.close();
+			rs.close();
 			
-				
 		}catch(SQLException se){
 			System.out.println(se.getMessage());			
 		}catch(Exception e){
@@ -102,5 +132,6 @@ public class RestaurantService {
 		returnObj.put("restaurants", jsonArr);			
 		return Response.status(200).entity(returnObj.toString()).build();
 	  } 
+	  
 	  
 }

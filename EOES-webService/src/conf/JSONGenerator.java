@@ -21,7 +21,7 @@ public class JSONGenerator {
 				
 				jsonObject = new JSONObject();
 				
-				for(int i =1; i<=colCount; i++)
+				for(int i=1; i <= colCount; i++)
 				{
 					jsonObject.put(rm.getColumnLabel(i), rs.getString(rm.getColumnLabel(i)));
 				}
