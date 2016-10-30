@@ -75,50 +75,13 @@ public class RestaurantService {
 			dbConnection db = new dbConnection();
 			con = db.getConnection();
 			
-			if(listDiv.toUpperCase() == "P")
-			{
-				cs = con.prepareCall("call PopularResList()");
-			}
-			else if(listDiv.toUpperCase() == "L")
-			{
-				cs = con.prepareCall("{call LocationResList(?)}");
-				cs.setString("keyword", "");
-			}
-			else if(listDiv.toUpperCase() == "A")
-			{
-				cs = con.prepareCall("{call AllergyResList(?)}");
-				cs.setString("keyword", "");
-			}
-			else
-			{
-				cs = con.prepareCall("{call searchList(?)}");
-				cs.setString("keyword", listDiv);
-			}
-			
-			/*
-			switch (listDiv.toUpperCase())
-			{
-				case "P": //Popular Restaurants
-					cs = con.prepareCall("call PopularResList()");
-					break;
-				case "L": //Categorized Restaurants by Location
-					cs = con.prepareCall("{call LocationResList(?)}");
-					cs.setString("keyword", "");
-					break;
-				case "A": //Categorized Restaurants by Allergy
-					cs = con.prepareCall("{call AllergyResList(?)}");
-					cs.setString("keyword", "");
-					break;
-				default:
-					cs = con.prepareCall("call PopularResList()");
-					break;
-			}*/
+			//Popular Restaurants
+			cs = con.prepareCall("call PopularResList()");
 			
 			rs = cs.executeQuery();
 			jg = new JSONGenerator();
 			jsonArr = jg.transforJSON(rs);
-			cs.close();
-			rs.close();
+			returnObj.put("restaurants", jsonArr);						
 			
 		}catch(SQLException se){
 			System.out.println(se.getMessage());			
@@ -127,11 +90,111 @@ public class RestaurantService {
 		}finally{
 			if(cs != null) try{cs.close();}catch(Exception e){}
 			if(con != null) try{con.close();}catch(Exception e){}
-		}
+		}	
 		
-		returnObj.put("restaurants", jsonArr);			
-		return Response.status(200).entity(returnObj.toString()).build();
+		return Response.status(200).entity(returnObj.toString()).build();	
+		
+	  } 
+	  
+	  @GET
+	  @Path("/list/{listDiv}/{keyword}")
+	  @Produces("application/json")
+	  public Response getResList(@PathParam("listDiv") String listDiv, @PathParam("keyword") String keyword) throws JSONException {
+		
+		JSONArray jsonArr = new JSONArray();
+		JSONObject returnObj = new JSONObject();
+		Connection con = null;
+		CallableStatement cs = null;
+		ResultSet rs = null;
+		
+		try{
+			dbConnection db = new dbConnection();
+			con = db.getConnection();
+			
+			switch (listDiv.toUpperCase())
+			{
+				case "L": //Categorized Restaurants by Location
+					cs = con.prepareCall("call LocationResList(?)");
+					cs.setString("keyword", keyword);
+					break;
+				case "A": //Categorized Restaurants by Allergy
+					cs = con.prepareCall("call AllergyResList(?)");											   
+					cs.setString("keyword", keyword);
+					break;
+				case "S": //Search Restaurants
+					cs = con.prepareCall("call SearchList(?)");											   
+					cs.setString("keyword", keyword);
+					break;
+				default:
+					cs = con.prepareCall("call PopularResList()");
+					break;
+			}
+			
+			rs = cs.executeQuery();
+			jg = new JSONGenerator();
+			jsonArr = jg.transforJSON(rs);
+			returnObj.put("restaurants", jsonArr);						
+			
+		}catch(SQLException se){
+			System.out.println(se.getMessage());			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(cs != null) try{cs.close();}catch(Exception e){}
+			if(con != null) try{con.close();}catch(Exception e){}
+		}	
+		
+		return Response.status(200).entity(returnObj.toString()).build();	
+		
+	  } 
+	  
+	  @GET
+	  @Path("/resDetail/{resId}")
+	  @Produces("application/json")
+	  public Response getResDetail(@PathParam("resId") String resId) throws JSONException {
+		
+		JSONObject returnObj = new JSONObject();  
+		JSONArray jsonArr = new JSONArray();
+		JSONArray imgJsonArr = new JSONArray();
+		Connection con = null;
+		CallableStatement cs = null;
+		CallableStatement imgCs = null;
+		ResultSet rs = null;
+		ResultSet imgRs = null;
+		
+		try{
+			dbConnection db = new dbConnection();
+			con = db.getConnection();
+			jg = new JSONGenerator();
+			
+			cs = con.prepareCall("call ResDetails(?)");
+			cs.setString("Res_Id", resId);
+			rs = cs.executeQuery();			
+			jsonArr = jg.transforJSON(rs);
+			
+			imgCs = con.prepareCall("call DetailImages(?,?)");
+			imgCs.setString("refer_Id", resId);
+			imgCs.setString("cate_Id", "1");
+			imgRs = imgCs.executeQuery();
+			imgJsonArr = jg.imgTransforJSON(imgRs);
+			
+			returnObj.put("resDetails", jsonArr);
+			returnObj.put("resImages", imgJsonArr);
+			
+		}catch(SQLException se){
+			System.out.println(se.getMessage());			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(cs != null) try{cs.close();}catch(Exception e){}
+			if(imgCs != null) try{imgCs.close();}catch(Exception e){}
+			if(con != null) try{con.close();}catch(Exception e){}
+		}	
+		
+		return Response.status(200).entity(returnObj.toString()).build();	
+		
 	  } 
 	  
 	  
 }
+
