@@ -80,7 +80,7 @@ public class MenuService {
 			
 			cs = con.prepareCall("call menuList(?,?)");
 			cs.setString("resId", resId);
-			cs.setString("isSpecial", "0"); // 1: special menu only, 0: all menus
+			cs.setString("isSpecial", isSpecial); // 1: special menu only, 0: all menus
 			
 			rs = cs.executeQuery();
 			jg = new JSONGenerator();
