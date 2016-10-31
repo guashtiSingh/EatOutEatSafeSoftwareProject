@@ -75,12 +75,22 @@ public class RestaurantService {
 			dbConnection db = new dbConnection();
 			con = db.getConnection();
 			
-			//Popular Restaurants
-			cs = con.prepareCall("call PopularResList()");
+			switch (listDiv.toUpperCase())
+			{
+				case "P": //Categorized Restaurants by Location
+					//Popular Restaurants
+					cs = con.prepareCall("call PopularResList()");
+					break;
+				default:
+					cs = con.prepareCall("call ResListForApp(?)");											   
+					cs.setString("keyword", "");
+					break;
+			}
+			
 			
 			rs = cs.executeQuery();
 			jg = new JSONGenerator();
-			jsonArr = jg.transforJSON(rs);
+			jsonArr = jg.imgTransforJSON(rs);
 			returnObj.put("restaurants", jsonArr);						
 			
 		}catch(SQLException se){
@@ -125,6 +135,10 @@ public class RestaurantService {
 					cs = con.prepareCall("call SearchList(?)");											   
 					cs.setString("keyword", keyword);
 					break;
+				case "M": //Search Restaurants for MobileApp
+					cs = con.prepareCall("call ResListForApp(?)");											   
+					cs.setString("keyword", keyword);
+					break;	
 				default:
 					cs = con.prepareCall("call PopularResList()");
 					break;
@@ -132,7 +146,7 @@ public class RestaurantService {
 			
 			rs = cs.executeQuery();
 			jg = new JSONGenerator();
-			jsonArr = jg.transforJSON(rs);
+			jsonArr = jg.imgTransforJSON(rs);
 			returnObj.put("restaurants", jsonArr);						
 			
 		}catch(SQLException se){

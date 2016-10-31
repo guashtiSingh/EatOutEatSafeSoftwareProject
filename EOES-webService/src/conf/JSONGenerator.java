@@ -55,7 +55,7 @@ public class JSONGenerator {
 				
 				for(int i =1; i<=colCount; i++)
 				{
-					if(rm.getColumnLabel(i).equals("Img_Path")) {
+					if(rm.getColumnLabel(i).equals("Img_Path") || rm.getColumnLabel(i).equals("MainImg_Path")) {
 						imgPath = IMG_PREFIX + rs.getString(rm.getColumnLabel(i)) + "/"; 
 						jsonObject.put(rm.getColumnLabel(i), imgPath);
 					}else{
