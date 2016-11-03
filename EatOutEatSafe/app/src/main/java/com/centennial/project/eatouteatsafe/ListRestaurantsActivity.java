@@ -1,6 +1,10 @@
 package com.centennial.project.eatouteatsafe;
 
+import android.app.ListActivity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,144 +17,159 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.centennial.project.eatouteatsafe.pojos.APIConnection;
 import com.centennial.project.eatouteatsafe.pojos.ImageLoader;
+import com.centennial.project.eatouteatsafe.pojos.JSONParser;
 import com.centennial.project.eatouteatsafe.pojos.Restaurant;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ListRestaurantsActivity extends AppCompatActivity {
 
     private ArrayList<Restaurant> restaurantList = null;
+    private int option = 0;
+    private String searchString = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_restaurant);
         updateTitle(getIntent());
-
-        String jsonString = "{\n" +
-                "\t\"restaurants\":[\n" +
-                "\t\t{\n" +
-                "\t\t  \"_id\": \"12345\",\n" +
-                "\t\t  \"name\": \"SneakyDees Restaurant and Concert Venue\",\n" +
-                "\t\t  \"image_url\": \"http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com/images%5Calmond.jpg\",\n" +
-                "\t\t  \"description\": \"Located in downtown Toronto’s vibrant Harbord Street village, just South of Bloor (two blocks west of Spadina), Almond Butterfly is a 100% gluten-free bake shop and espresso bar. You can find us at 100A Harbord Street. Click here for directions.HOMEMADE, FRESH BAKED GOODS & TREATS From fresh-baked muffins, biscuits, and bagels... to our mouth-watering cupcakes, brownies, & cookies- we’ve got you covered.Toasted breakfast egg sandwiches, bagels (we make the bagels fresh right here every morning), and grilled lunch sandwiches that will definitely hit the spot. In the Annex? Come by the shop to enjoy a scrumptious, grilled turkey & pesto sandwich... or perhaps a melt-in-your-mouth ham & cheddar melt, hot off the grill? All gluten-free, of course. :) DINE-IN, TAKEOUT, OR DELIVERY!\",\n" +
-                "\t\t  \"rating\": \"3\",\n" +
-                "\t\t  \"reviews\": \"33\"\n" +
-                "\t\t},\n" +
-                "\t\t{\n" +
-                "\t\t  \"_id\": \"12346\",\n" +
-                "\t\t  \"name\": \"Poutini’s House Of Poutine \",\n" +
-                "\t\t  \"image_url\": \"http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com/images%5Cloving_hut.jpg\",\n" +
-                "\t\t  \"description\": \"The Loving Hut serves healthy, delicious foods with a variety of tastes, such as Vietnamese and Chinese dishes that are organic, vegan, non-GMO, peanut/nut free and contain no MSG. Their menu is also filled with many gluten-free options. Dishes are made to order and the staff is happy to make customizations to suit your tastes or dietary restrictions\",\n" +
-                "\t\t  \"rating\": \"2\",\n" +
-                "\t\t  \"reviews\": \"10\"\n" +
-                "\t\t},\n" +
-                "\t\t{\n" +
-                "\t\t  \"_id\": \"12347\",\n" +
-                "\t\t  \"name\": \"restaurant3\",\n" +
-                "\t\t  \"image_url\": \"http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com/images%5Ckeg.jpg\",\n" +
-                "\t\t  \"description\": \"test description 3\",\n" +
-                "\t\t  \"rating\": \"4\",\n" +
-                "\t\t  \"reviews\": \"20\"\n" +
-                "\t\t},\n" +
-                "\t\t{\n" +
-                "\t\t  \"_id\": \"12348\",\n" +
-                "\t\t  \"name\": \"restaurant4\",\n" +
-                "\t\t  \"image_url\": \"http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com/images%5Cpizzaiolo.jpg\",\n" +
-                "\t\t  \"description\": \"test description 4\",\n" +
-                "\t\t  \"rating\": \"1\",\n" +
-                "\t\t  \"reviews\": \"5\"\n" +
-                "\t\t},\n" +
-                "\t\t{\n" +
-                "\t\t  \"_id\": \"12349\",\n" +
-                "\t\t  \"name\": \"restaurant5\",\n" +
-                "\t\t  \"image_url\": \"http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com/images%5Cpoutinis.jpg\",\n" +
-                "\t\t  \"description\": \"test description 5\",\n" +
-                "\t\t  \"rating\": \"2\",\n" +
-                "\t\t  \"reviews\": \"3\"\n" +
-                "\t\t}\n" +
-                "\t]\n" +
-                "}";
-        parseJSONData(jsonString);
-        populateListView();
-
+        connectToAPIAndGetJSON();
     }
+
+    /**
+     * Update the title of list activity
+     * @param intent
+     */
 
     private void updateTitle(Intent intent){
         TextView titleTxt = (TextView) findViewById(R.id.listText);
         String[] titleArray = getResources().getStringArray(R.array.titles_res_listPage);
 
+
         switch (intent.getIntExtra("BUTTON_CODE",0)){
             case 1:
+                option = 0;
                 titleTxt.setText(titleArray[0]);
                 break;
             case 2:
+                option = 1;
                 titleTxt.setText(titleArray[1]);
                 break;
             case 3:
+                option = 2;
                 titleTxt.setText(titleArray[2]);
                 break;
+            case 4:
+                option = 3;
+                searchString = intent.getStringExtra("SEARCH_STRING");
+                titleTxt.setText(titleArray[3]+" : "+searchString);
+                break;
             default:
-                titleTxt.setText(titleArray[3]);
+                option = 0;
+                titleTxt.setText(titleArray[4]);
                 break;
         }
     }
 
-    /*
+    /**
+     * Connect to API and get JSON data
+     */
+
     private void connectToAPIAndGetJSON(){
+        // start parsing the JSON data
 
-    }*/
+        APIConnection apiConnection = new APIConnection(this, option, searchString);
+        apiConnection.execute();
+    }
 
-    private void parseJSONData(String jsonString){
+    /**
+     * Parse JSON data using the JSON string got from the API
+     * @param jsonString
+     */
+
+    public boolean parseJSONData(String jsonString){
 
         try {
-            JSONObject jsonRootObject  = new JSONObject(jsonString);
-            String data = "";
-
             //Get the instance of JSONArray that contains JSONObjects
+            JSONObject jsonRootObject  = new JSONObject(jsonString);
             JSONArray jsonArray = jsonRootObject.optJSONArray("restaurants");
-            JSONObject jsonObject = null;
-            Restaurant restObj = null;
             restaurantList =  new ArrayList<Restaurant>();
-
-
-            //Iterate the jsonArray and print the info of JSONObjects
-            for(int i=0; i < jsonArray.length(); i++) {
-
-                jsonObject = jsonArray.getJSONObject(i);
-                restObj = new Restaurant();
-
-                restObj.set_id(jsonObject.optString("_id").toString());
-                restObj.setName(jsonObject.optString("name").toString());
-                restObj.setImageURL(jsonObject.optString("image_url"));
-                restObj.setDescritpion(jsonObject.optString("description"));
-                restObj.setRating(Integer.parseInt(jsonObject.optString("rating")));
-                restObj.setReviews(Integer.parseInt(jsonObject.optString("reviews")));
-
-                restaurantList.add(restObj);
-            }
+            iterateThroughJSON(jsonArray);
 
         } catch (JSONException e) {
-            Toast.makeText(ListRestaurantsActivity.this, "Something went wrong on loading list, going to main menu", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+            Toast.makeText(ListRestaurantsActivity.this, "Something went wrong on loading list, " +
+                    "going to main menu", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         } catch (Exception e){
-            Toast.makeText(ListRestaurantsActivity.this, "Something went wrong on loading list, going to main menu", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+            Toast.makeText(ListRestaurantsActivity.this, "Something went wrong on loading list, " +
+                    "going to main menu", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
+        return restaurantList.isEmpty() ? true : false;
     }
 
-    private void populateListView(){
+    /**
+     *
+     * @param jsonArray
+     * @throws JSONException
+     */
+
+    private void iterateThroughJSON(JSONArray jsonArray) throws JSONException {
+
+        String data = "";
+        String url = "";
+        JSONObject jsonObject = null;
+        Restaurant restObj = null;
+
+        //Iterate the jsonArray and create restaurant objects using JSON data
+        for(int i=0; i < jsonArray.length(); i++) {
+
+            jsonObject = jsonArray.getJSONObject(i);
+            restObj = new Restaurant();
+            if(jsonObject.has("Res_Id")) {
+                restObj.set_id(jsonObject.optString("Res_Id").toString());
+                restObj.setName(jsonObject.has("Res_Name") ? jsonObject.optString("Res_Name").toString() : ""); // store name if only json data has a field named "Res_Name"
+                url = jsonObject.optString("MainImg_Path").toString() +
+                        jsonObject.optString("MainImg_Name").toString();
+                restObj.setImageURL(url);
+                restObj.setDescritpion(jsonObject.has("Res_Description") ?
+                        jsonObject.optString("Res_Description") : "None");
+                restObj.setRating(Float.parseFloat(jsonObject.has("Rate") ?
+                        jsonObject.optString("Rate") : "0"));
+                restObj.setReviews(Integer.parseInt(jsonObject.has("Total_review") ?
+                        jsonObject.optString("Total_review"): "0"));
+            }
+            restaurantList.add(restObj);
+        }
+    }
+
+    /**
+     * Populate List View using the list adapter
+     */
+
+    public void populateListView(){
         ArrayAdapter<Restaurant> resAdapter = new RestaurantListAdapter();
         ListView restaurantList = (ListView)findViewById(R.id.resListView);
         restaurantList.setAdapter(resAdapter);
     }
+
+    /**
+     *  List adapter class that implements each item in the list
+     */
 
     private class RestaurantListAdapter extends ArrayAdapter<Restaurant> {
 
@@ -183,7 +202,7 @@ public class ListRestaurantsActivity extends AppCompatActivity {
 
             nameTxtView.setText(currentRestaurant.getName());
             itemImageLoader.DisplayImage(currentRestaurant.getImageURL(),resImgView);
-            ratingBar.setRating((float)currentRestaurant.getRating());
+            ratingBar.setRating(currentRestaurant.getRating());
             ratingBar.setEnabled(false);
             reviewTxtView.setText(currentRestaurant.getReviews() + " Reviews");
 
@@ -200,4 +219,6 @@ public class ListRestaurantsActivity extends AppCompatActivity {
         }
 
     }
+
+
 }

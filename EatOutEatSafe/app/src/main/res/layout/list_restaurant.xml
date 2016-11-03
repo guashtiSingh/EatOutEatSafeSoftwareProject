@@ -30,4 +30,12 @@
         android:layout_below="@+id/listText"
         android:layout_alignParentStart="true"
         android:layout_marginTop="49dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/footerText"
+        android:layout_below="@+id/resListView"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

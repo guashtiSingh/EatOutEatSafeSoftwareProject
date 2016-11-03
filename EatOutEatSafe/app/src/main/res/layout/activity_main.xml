@@ -42,7 +42,8 @@
         android:background="#3e85f6"
         android:layout_alignBottom="@+id/searchEdit"
         android:layout_alignEnd="@+id/headingImgView"
-        android:layout_toEndOf="@+id/searchEdit" />
+        android:layout_toEndOf="@+id/searchEdit"
+        android:onClick="callListRestaurentActivity"/>
 
     <Button
         android:layout_width="wrap_content"

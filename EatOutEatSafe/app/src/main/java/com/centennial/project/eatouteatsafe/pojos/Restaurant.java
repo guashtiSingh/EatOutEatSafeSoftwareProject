@@ -1,16 +1,20 @@
 package com.centennial.project.eatouteatsafe.pojos;
 
+import java.util.Comparator;
+
 /**
  * Created by a_b on 11-10-2016.
  */
 public class Restaurant {
 
-    private String _id;
+    public String _id;
     private String name;
     private String imageURL;
     private String descritpion;
-    private int rating;
+    private Float rating;
     private int reviews;
+    private String allergy;
+    private String location;
 
 
     public String get_id() {
@@ -45,11 +49,11 @@ public class Restaurant {
         this.descritpion = descritpion;
     }
 
-    public int getRating() {
+    public Float getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Float rating) {
         this.rating = rating;
     }
 
@@ -60,4 +64,47 @@ public class Restaurant {
     public void setReviews(int reviews) {
         this.reviews = reviews;
     }
+
+    public String getAllergy() {
+        return allergy;
+    }
+
+    public void setAllergy(String allergy) {
+        this.allergy = allergy;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public static Comparator<Restaurant> allergyComparator = new Comparator<Restaurant>() {
+
+        public int compare(Restaurant r1, Restaurant r2) {
+            String restaurantName1 = r1.getAllergy().toUpperCase();
+            String restaurantName2 = r2.getAllergy().toUpperCase();
+
+            //ascending order
+            return restaurantName1.compareTo(restaurantName2);
+
+            //descending order
+            //return StudentName2.compareTo(StudentName1);
+    }};
+
+    public static Comparator<Restaurant> locationComparator = new Comparator<Restaurant>() {
+
+        public int compare(Restaurant r1, Restaurant r2) {
+            String restaurantName1 = r1.getLocation().toUpperCase();
+            String restaurantName2 = r2.getLocation().toUpperCase();
+
+            //ascending order
+            return restaurantName1.compareTo(restaurantName2);
+
+            //descending order
+            //return StudentName2.compareTo(StudentName1);
+    }};
+
 }
