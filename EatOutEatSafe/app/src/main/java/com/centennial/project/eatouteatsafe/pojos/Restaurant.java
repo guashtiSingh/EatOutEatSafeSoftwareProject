@@ -1,20 +1,27 @@
 package com.centennial.project.eatouteatsafe.pojos;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
  * Created by a_b on 11-10-2016.
  */
-public class Restaurant {
+public class Restaurant implements Serializable{
 
     public String _id;
     private String name;
+    private String ManagerName;
     private String imageURL;
     private String descritpion;
+    private String restaurantCategory;
     private Float rating;
     private int reviews;
     private String allergy;
     private String location;
+    private  String province;
+    private String[] images;
+    private boolean isGroupHeader = false;
+
 
 
     public String get_id() {
@@ -81,6 +88,10 @@ public class Restaurant {
         this.location = location;
     }
 
+    public boolean isGroupHeader() {return isGroupHeader;}
+
+    public void setGroupHeader(boolean groupHeader) {isGroupHeader = groupHeader;}
+
     public static Comparator<Restaurant> allergyComparator = new Comparator<Restaurant>() {
 
         public int compare(Restaurant r1, Restaurant r2) {
@@ -107,4 +118,36 @@ public class Restaurant {
             //return StudentName2.compareTo(StudentName1);
     }};
 
+
+    public String getManagerName() {
+        return ManagerName;
+    }
+
+    public void setManagerName(String managerName) {
+        ManagerName = managerName;
+    }
+
+    public String getRestaurantCategory() {
+        return restaurantCategory;
+    }
+
+    public void setRestaurantCategory(String restaurantCategory) {
+        this.restaurantCategory = restaurantCategory;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String[] getImages() {
+        return images;
+    }
+
+    public void setImages(String[] images) {
+        this.images = images;
+    }
 }

@@ -29,13 +29,55 @@
         android:id="@+id/resListView"
         android:layout_below="@+id/listText"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="49dp" />
+        android:layout_marginTop="49dp"
+        android:layout_above="@+id/relativeLayout" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/footerText"
-        android:layout_below="@+id/resListView"
+        android:layout_below="@+id/listText"
         android:layout_alignParentStart="true" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/relativeLayout"
+        android:background="#080808"
+        android:padding="5dp">
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:text="Login"
+            android:id="@+id/loginBtnList"
+            android:textColor="#ffffff"
+            android:background="@android:color/holo_green_dark"
+            android:onClick="onLoginBtnClick"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:text="SignUp"
+            android:id="@+id/signUpBtnList"
+            android:textColor="#ffffff"
+            android:background="@android:color/holo_orange_light"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/loginBtnList" />
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:text="User"
+            android:id="@+id/userBtnList"
+            android:textColor="#ffffff"
+            android:background="@android:color/holo_green_dark"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
 </RelativeLayout>

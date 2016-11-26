@@ -2,7 +2,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
     android:weightSum="1">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Restaurant Name"
+        android:id="@+id/resNameTxtView"
+        android:maxLength="40"
+        android:textColor="#0d74ac"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="36dp" />
 
     <ImageView
         android:layout_width="116dp"
@@ -18,28 +34,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Restaurant Name"
-        android:id="@+id/resNameTxtView"
-        android:maxLength="40"
-        android:textColor="#0d74ac"
-        android:paddingLeft="10dp"
-        android:paddingTop="5dp"
-        android:textStyle="bold"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Reviews"
         android:id="@+id/revTxtView"
         android:paddingLeft="10dp"
         android:textColor="#a4056c"
-        android:layout_below="@+id/itemImage"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="82dp"
-        android:paddingBottom="5dp"/>
+        android:paddingBottom="5dp"
+        android:layout_below="@+id/ratingBar"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -49,15 +50,30 @@
         android:id="@+id/descTxtView"
         android:maxLength="60"
         android:paddingLeft="10dp"
-        android:layout_below="@+id/resNameTxtView"
         android:layout_toEndOf="@+id/itemImage"
-        android:layout_alignBottom="@+id/itemImage" />
+        android:layout_alignBottom="@+id/itemImage"
+        android:layout_alignTop="@+id/itemImage" />
 
     <RatingBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ratingBar"
         android:layout_below="@+id/itemImage"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/titleTxtView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:background="@android:color/holo_green_dark"
+        android:textAlignment="center"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:padding="10dp" />
 
 </RelativeLayout>

@@ -4,15 +4,22 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +36,7 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class ListRestaurantsActivity extends AppCompatActivity {
@@ -44,6 +52,7 @@ public class ListRestaurantsActivity extends AppCompatActivity {
         setContentView(R.layout.list_restaurant);
         updateTitle(getIntent());
         connectToAPIAndGetJSON();
+        checkAndUpdateAccountUI();
     }
 
     /**
@@ -87,7 +96,6 @@ public class ListRestaurantsActivity extends AppCompatActivity {
 
     private void connectToAPIAndGetJSON(){
         // start parsing the JSON data
-
         APIConnection apiConnection = new APIConnection(this, option, searchString);
         apiConnection.execute();
     }
@@ -106,18 +114,12 @@ public class ListRestaurantsActivity extends AppCompatActivity {
             restaurantList =  new ArrayList<Restaurant>();
             iterateThroughJSON(jsonArray);
 
+
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(ListRestaurantsActivity.this, "Something went wrong on loading list, " +
-                    "going to main menu", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+
         } catch (Exception e){
             e.printStackTrace();
-            Toast.makeText(ListRestaurantsActivity.this, "Something went wrong on loading list, " +
-                    "going to main menu", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
         }
         return restaurantList.isEmpty() ? true : false;
     }
@@ -139,21 +141,97 @@ public class ListRestaurantsActivity extends AppCompatActivity {
         for(int i=0; i < jsonArray.length(); i++) {
 
             jsonObject = jsonArray.getJSONObject(i);
-            restObj = new Restaurant();
-            if(jsonObject.has("Res_Id")) {
-                restObj.set_id(jsonObject.optString("Res_Id").toString());
-                restObj.setName(jsonObject.has("Res_Name") ? jsonObject.optString("Res_Name").toString() : ""); // store name if only json data has a field named "Res_Name"
-                url = jsonObject.optString("MainImg_Path").toString() +
-                        jsonObject.optString("MainImg_Name").toString();
-                restObj.setImageURL(url);
-                restObj.setDescritpion(jsonObject.has("Res_Description") ?
-                        jsonObject.optString("Res_Description") : "None");
-                restObj.setRating(Float.parseFloat(jsonObject.has("Rate") ?
-                        jsonObject.optString("Rate") : "0"));
-                restObj.setReviews(Integer.parseInt(jsonObject.has("Total_review") ?
-                        jsonObject.optString("Total_review"): "0"));
+            String allergyString = jsonObject.has("AC_Name") ? jsonObject.optString("AC_Name") : null;
+            String[] allergiesPerRestaurant = allergyString != null ? allergyString.split(",") : null;
+
+            if(allergiesPerRestaurant != null && option == 1){
+                for(String allergyName:allergiesPerRestaurant){
+
+                    if (jsonObject.has("Res_Id")) {
+                        restObj = new Restaurant();
+                        restObj.set_id(jsonObject.optString("Res_Id").toString());
+                        restObj.setName(jsonObject.has("Res_Name") ? jsonObject.optString("Res_Name").toString() : ""); // store name if only json data has a field named "Res_Name"
+                        url = jsonObject.optString("MainImg_Path").toString() +
+                                jsonObject.optString("MainImg_Name").toString();
+                        restObj.setImageURL(url);
+                        restObj.setDescritpion(jsonObject.has("Res_Description") ?
+                                jsonObject.optString("Res_Description") : "None");
+                        restObj.setRating(Float.parseFloat(jsonObject.has("Rate") ?
+                                jsonObject.optString("Rate") : "0"));
+                        restObj.setReviews(Integer.parseInt(jsonObject.has("Total_review") ?
+                                jsonObject.optString("Total_review") : "0"));
+                        restObj.setAllergy(allergyName);
+                        restObj.setLocation(jsonObject.has("LC_Name") ?
+                                jsonObject.optString("LC_Name") : "None");
+                        restaurantList.add(restObj);
+                    }
+                }
+            }else {
+
+                if (jsonObject.has("Res_Id")) {
+                    restObj = new Restaurant();
+                    restObj.set_id(jsonObject.optString("Res_Id").toString());
+                    restObj.setName(jsonObject.has("Res_Name") ? jsonObject.optString("Res_Name").toString() : ""); // store name if only json data has a field named "Res_Name"
+                    url = jsonObject.optString("MainImg_Path").toString() +
+                            jsonObject.optString("MainImg_Name").toString();
+                    restObj.setImageURL(url);
+                    restObj.setDescritpion(jsonObject.has("Res_Description") ?
+                            jsonObject.optString("Res_Description") : "None");
+                    restObj.setRating(Float.parseFloat(jsonObject.has("Rate") ?
+                            jsonObject.optString("Rate") : "0"));
+                    restObj.setReviews(Integer.parseInt(jsonObject.has("Total_review") ?
+                            jsonObject.optString("Total_review") : "0"));
+                    restObj.setAllergy(jsonObject.has("AC_Name") ?
+                            jsonObject.optString("AC_Name") : "X_allergy not specified");
+                    restObj.setLocation(jsonObject.has("LC_Name") ?
+                            jsonObject.optString("LC_Name") : "None");
+                    restaurantList.add(restObj);
+                }
             }
-            restaurantList.add(restObj);
+
+        }
+
+        sortRestaurantListBasedType(restaurantList);
+    }
+
+    /**
+     *
+     * @param restaurantList
+     */
+    private void sortRestaurantListBasedType(ArrayList<Restaurant> restaurantList){
+
+        switch (option){
+            case 0:
+                break;
+            case 1:
+                Collections.sort(restaurantList,Restaurant.allergyComparator);
+                groupRestaurants(restaurantList);
+                break;
+            case 2:
+                Collections.sort(restaurantList,Restaurant.locationComparator);
+                groupRestaurants(restaurantList);
+                break;
+        }
+    }
+
+    private void groupRestaurants(ArrayList<Restaurant> restaurantList){
+        String currentGroupValue = null;
+        String previousGroupValue = null;
+
+        for(Restaurant resObj:restaurantList){
+            if(option == 1) {
+                currentGroupValue = resObj.getAllergy();
+                if (!(currentGroupValue.equals(previousGroupValue))) {
+                    previousGroupValue = currentGroupValue;
+                    resObj.setGroupHeader(true);
+                }
+            }else if (option == 2){
+                currentGroupValue = resObj.getLocation();
+                if (!(currentGroupValue.equals(previousGroupValue))) {
+                    previousGroupValue = currentGroupValue;
+                    resObj.setGroupHeader(true);
+                }
+            }
         }
     }
 
@@ -168,7 +246,7 @@ public class ListRestaurantsActivity extends AppCompatActivity {
     }
 
     /**
-     *  List adapter class that implements each item in the list
+     *  List adapter class that implements each item trans_in the list
      */
 
     private class RestaurantListAdapter extends ArrayAdapter<Restaurant> {
@@ -193,7 +271,7 @@ public class ListRestaurantsActivity extends AppCompatActivity {
             Restaurant currentRestaurant = restaurantList.get(position);
 
             // Add details to each row of item
-
+            showGroupTitle(currentRestaurant, itemView);
             TextView nameTxtView = (TextView)itemView.findViewById(R.id.resNameTxtView);
             TextView descTxtView = (TextView) itemView.findViewById(R.id.descTxtView);
             TextView reviewTxtView = (TextView) itemView.findViewById(R.id.revTxtView);
@@ -218,7 +296,74 @@ public class ListRestaurantsActivity extends AppCompatActivity {
 
         }
 
+        private void showGroupTitle(Restaurant currentRest, View itemView){
+            TextView groupTitle = (TextView) itemView.findViewById(R.id.titleTxtView);
+
+            if(option == 1) {
+                if(currentRest.isGroupHeader()){
+                    groupTitle.setVisibility(View.VISIBLE);
+                    groupTitle.setText(currentRest.getAllergy());
+                }else{
+                    groupTitle.setVisibility(View.INVISIBLE);}
+            }else if (option == 2){
+                if(currentRest.isGroupHeader()){
+                    groupTitle.setVisibility(View.VISIBLE);
+                    groupTitle.setText(currentRest.getLocation());
+                }else{groupTitle.setVisibility(View.INVISIBLE);}
+            }else{
+                groupTitle.setVisibility(View.INVISIBLE);
+            }
+        }
+
     }
 
+    public void registItemClick(){
+        final ListView restaurantListView = (ListView)findViewById(R.id.resListView);
 
+        restaurantListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Intent intent = new Intent(ListRestaurantsActivity.this, ViewRestaurantActivity.class);
+                intent.putExtra("Restaurant",restaurantList.get(position));
+                startActivity(intent);
+
+            }
+        });
+    }
+
+    public void onLoginBtnClick(View view){
+        SharedPreferences sessionPreferences = getSharedPreferences(LoginActivity.APP_PREFERENCES, MODE_PRIVATE);
+        if(sessionPreferences.getBoolean("isValidSession",false)) {
+            SharedPreferences.Editor editor = sessionPreferences.edit();
+            editor.clear();
+            editor.commit();
+            checkAndUpdateAccountUI();
+            Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
+        }else{
+            Intent intent = new Intent(ListRestaurantsActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    /**
+     * Updates the footer based on session
+     */
+    private void checkAndUpdateAccountUI(){
+        SharedPreferences sessionPreferences = getSharedPreferences(LoginActivity.APP_PREFERENCES, MODE_PRIVATE);
+        Button loginBtn = (Button) findViewById(R.id.loginBtnList);
+        Button signUp = (Button) findViewById(R.id.signUpBtnList);
+        Button userName = (Button) findViewById(R.id.userBtnList);
+
+        if(sessionPreferences.getBoolean("isValidSession",false)){
+            loginBtn.setText("Logout");
+            userName.setText(sessionPreferences.getString("FirstName","Invalid User"));
+            signUp.setVisibility(View.INVISIBLE);
+
+        }else {
+            loginBtn.setText("Login");
+            userName.setText("Guest");
+            signUp.setVisibility(View.VISIBLE);
+        }
+    }
 }

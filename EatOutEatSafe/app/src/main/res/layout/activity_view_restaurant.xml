@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="10dp"
+    tools:context="com.centennial.project.eatouteatsafe.ViewRestaurantActivity"
+    android:id="@+id/relativeLayoutOne"
+    >
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:layout_above="@+id/relativeLayout2">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/viewResRelativeLayout">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Restaurant Name"
+                android:id="@+id/titleBtn"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:textAlignment="textStart"
+                android:textColor="#ffffff"
+                android:background="@android:color/holo_orange_dark"
+                android:padding="2dp"
+                android:textSize="20dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/titleSupplyBtn"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:textColor="#ffffff"
+                android:background="@android:color/holo_green_light"
+                android:textAlignment="viewEnd"
+                android:padding="2dp"
+                android:textSize="20dp" />
+
+            <ImageSwitcher
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:id="@+id/resImageSwitcher"
+                android:layout_below="@+id/titleBtn"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="56dp" >
+
+            </ImageSwitcher>
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="&lt;"
+                android:id="@+id/previousBtn"
+                android:layout_alignBottom="@+id/resImageSwitcher"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="96dp"
+                android:background="@color/highlighted_text_material_light"
+                android:textSize="30dp"
+                android:textColor="#ffffff" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=">"
+                android:id="@+id/nextBtn"
+                android:layout_alignTop="@+id/previousBtn"
+                android:layout_alignEnd="@+id/titleSupplyBtn"
+                android:background="@color/highlighted_text_material_light"
+                android:textColor="#ffffff"
+                android:textSize="30dp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/resImageSwitcher"
+                android:layout_alignParentStart="true"
+                android:paddingBottom="50dp">
+
+                <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:id="@+id/descriptionBtn"
+                    android:textAlignment="textStart"
+                    android:background="@color/design_textinput_error_color_light"
+                    android:textColor="#ffffff"
+                    android:padding="6dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Medium Text"
+                    android:id="@+id/descTxtView"
+                    android:layout_below="@+id/resImageSwitcher"
+                    android:layout_alignParentStart="true"
+                    android:padding="10dp"
+                    android:background="#ffffff" />
+
+                <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Location"
+                    android:id="@+id/locationBtn"
+                    android:layout_above="@+id/menuBtn"
+                    android:layout_alignParentStart="true"
+                    android:textAlignment="textStart"
+                    android:background="@color/material_blue_grey_800"
+                    android:textColor="#ffffff"
+                    android:padding="10dp" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Check Menu >>"
+                    android:id="@+id/menuBtn"
+                    android:ellipsize="end"
+                    android:padding="10dp"
+                    android:layout_below="@+id/scrollView"
+                    android:layout_alignParentStart="true" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Medium Text"
+                android:id="@+id/resTitleTxtView"
+                android:layout_below="@+id/titleBtn"
+                android:layout_alignParentStart="true"
+                android:padding="5dp"
+                android:textColor="@color/abc_search_url_text_selected"
+                android:textStyle="bold|italic" />
+        </RelativeLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/relativeLayout2"
+        android:background="#090909"
+        android:padding="5dp">
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:text="Login"
+            android:id="@+id/onLoginBtnViewRes"
+            android:textColor="#ffffff"
+            android:background="@android:color/holo_green_dark"
+            android:onClick="onLoginBtnClick"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:text="SignUp"
+            android:id="@+id/SignUpViewRes"
+            android:textColor="#ffffff"
+            android:background="@android:color/holo_orange_light"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/onLoginBtnViewRes" />
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:text="User"
+            android:id="@+id/userBtnViewRes"
+            android:textColor="#ffffff"
+            android:background="@android:color/holo_green_dark"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
+</RelativeLayout>

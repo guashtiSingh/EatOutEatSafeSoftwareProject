@@ -155,7 +155,7 @@ public class ImageLoader {
         return false;
     }
 
-    //Used to display bitmap in the UI thread
+    //Used to display bitmap trans_in the UI thread
     class BitmapDisplayer implements Runnable
     {
         Bitmap bitmap;
