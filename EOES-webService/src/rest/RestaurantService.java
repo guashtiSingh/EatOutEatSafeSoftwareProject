@@ -12,9 +12,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import conf.dbConnection;
 import conf.JSONGenerator;
@@ -90,7 +90,7 @@ public class RestaurantService {
 			
 			rs = cs.executeQuery();
 			jg = new JSONGenerator();
-			jsonArr = jg.imgTransforJSON(rs);
+			jsonArr = (JSONArray)jg.imgTransforJSON(rs);
 			returnObj.put("restaurants", jsonArr);						
 			
 		}catch(SQLException se){
@@ -211,4 +211,3 @@ public class RestaurantService {
 	  
 	  
 }
-

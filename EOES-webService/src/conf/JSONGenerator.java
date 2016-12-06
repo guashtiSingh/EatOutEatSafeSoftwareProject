@@ -4,8 +4,11 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
+
+//import org.json.JSONArray;
+//import org.json.JSONObject;
 
 public class JSONGenerator {
 
@@ -27,7 +30,6 @@ public class JSONGenerator {
 				{
 					jsonObject.put(rm.getColumnLabel(i), rs.getString(rm.getColumnLabel(i)));
 				}
-				
 				
 				jsonArr.put(jsonObject);
 			}
@@ -57,7 +59,10 @@ public class JSONGenerator {
 				{
 					if(rm.getColumnLabel(i).equals("Img_Path") || rm.getColumnLabel(i).equals("MainImg_Path")) {
 						imgPath = IMG_PREFIX + rs.getString(rm.getColumnLabel(i)) + "/"; 
-						jsonObject.put(rm.getColumnLabel(i), imgPath);
+						System.out.println("before: " + imgPath);
+						jsonObject.put(rm.getColumnLabel(i), imgPath.toString());
+						System.out.println("after: " + jsonObject.get(rm.getColumnLabel((i))));
+						
 					}else{
 						jsonObject.put(rm.getColumnLabel(i), rs.getString(rm.getColumnLabel(i)));
 					}
