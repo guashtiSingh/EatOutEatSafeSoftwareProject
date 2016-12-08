@@ -1,43 +1,30 @@
 package com.centennial.project.eatouteatsafe;
 
-import android.app.ListActivity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.centennial.project.eatouteatsafe.pojos.APIConnection;
 import com.centennial.project.eatouteatsafe.pojos.ImageLoader;
-import com.centennial.project.eatouteatsafe.pojos.JSONParser;
 import com.centennial.project.eatouteatsafe.pojos.Restaurant;
+import com.centennial.project.eatouteatsafe.pojos.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
 public class ListRestaurantsActivity extends AppCompatActivity {
 
@@ -51,7 +38,7 @@ public class ListRestaurantsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_restaurant);
         updateTitle(getIntent());
-        connectToAPIAndGetJSON();
+        Utils.connectToAPIAndGetJSON(this, option, searchString);
         checkAndUpdateAccountUI();
     }
 
@@ -94,11 +81,6 @@ public class ListRestaurantsActivity extends AppCompatActivity {
      * Connect to API and get JSON data
      */
 
-    private void connectToAPIAndGetJSON(){
-        // start parsing the JSON data
-        APIConnection apiConnection = new APIConnection(this, option, searchString);
-        apiConnection.execute();
-    }
 
     /**
      * Parse JSON data using the JSON string got from the API

@@ -3,26 +3,23 @@ package com.centennial.project.eatouteatsafe;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
-
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,7 +33,6 @@ import android.widget.Toast;
 
 import com.centennial.project.eatouteatsafe.pojos.JSONParser;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -338,7 +334,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 sharedpreferences = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putBoolean("isValidSession", true);
-                editor.putString("Username","anjith");
+                editor.putString("Username","beymig");
                 editor.putString("FirstName","Anjith");
                 editor.putInt("UserId",2);
                 editor.commit();

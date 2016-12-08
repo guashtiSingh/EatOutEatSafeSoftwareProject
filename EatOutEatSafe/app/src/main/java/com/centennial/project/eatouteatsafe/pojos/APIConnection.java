@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.centennial.project.eatouteatsafe.ListRestaurantsActivity;
 import com.centennial.project.eatouteatsafe.R;
+import com.centennial.project.eatouteatsafe.ReviewListActivity;
 import com.centennial.project.eatouteatsafe.ViewRestaurantActivity;
 
 
@@ -24,6 +25,8 @@ public class APIConnection extends AsyncTask<Void, Void, String> {
     private ListRestaurantsActivity listRest = null;
     private ViewRestaurantActivity viewRest = null;
     private ProgressDialog progressDialog = null;
+    private ReviewListActivity reviewList = null;
+
     private String[] credentials = null;
     protected String WEBSERVICE_URL_POPULAR = "http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com:8080/EOES-webService/restaurant/list/P";
     protected String WEBSERVICE_URL_LOCATION = "http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com:8080/EOES-webService/restaurant/list/L";
@@ -33,6 +36,9 @@ public class APIConnection extends AsyncTask<Void, Void, String> {
     //user webservice links
     protected String WEBSERVICE_URL_LOGIN = "http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com:8080/EOES-webService/user/login";
     protected String WEBSERVICE_URL_SIGNUP = "http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com:8080/EOES-webService/user/signup";
+    //Review
+    protected String WEBSERVICE_REVIEW_LIST = "http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com:8080/EOES-webService/review/list/";
+
 
     /**
      *
@@ -50,6 +56,13 @@ public class APIConnection extends AsyncTask<Void, Void, String> {
 
     public APIConnection(ViewRestaurantActivity act, int option, String resId){
         viewRest = act;
+        OPTION = option;
+        progressDialog = new ProgressDialog(act);
+        this.resId = resId;
+    }
+
+    public APIConnection(ReviewListActivity act, int option, String resId){
+        reviewList = act;
         OPTION = option;
         progressDialog = new ProgressDialog(act);
         this.resId = resId;
@@ -95,6 +108,9 @@ public class APIConnection extends AsyncTask<Void, Void, String> {
             case 4:
                 jsonString = jsonParserObj.makeHttpRequest(WEBSERVICE_URL_RESTAURANT+resId,"GET",null);
                 break;
+            case 5:
+                jsonString = jsonParserObj.makeHttpRequest(WEBSERVICE_REVIEW_LIST+resId,"GET",null);
+                break;
             default:
                 jsonString = jsonParserObj.makeHttpRequest(WEBSERVICE_URL_POPULAR,"GET",null);
                 break;
@@ -110,9 +126,13 @@ public class APIConnection extends AsyncTask<Void, Void, String> {
             doListActivities();
         }else if(OPTION == 4){
             viewRest.populateFromJSON(jsonString);
+        }else if(OPTION == 5){
+            reviewList.parseJSONtoReview(jsonString, OPTION);
         }
+
         if(progressDialog != null)
             this.progressDialog.dismiss();
+
     }
 
     private void doListActivities(){

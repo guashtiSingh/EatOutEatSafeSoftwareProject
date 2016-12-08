@@ -1,5 +1,9 @@
 package com.centennial.project.eatouteatsafe.pojos;
 
+import com.centennial.project.eatouteatsafe.ListRestaurantsActivity;
+import com.centennial.project.eatouteatsafe.ReviewListActivity;
+import com.centennial.project.eatouteatsafe.ViewRestaurantActivity;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -22,5 +26,23 @@ public class Utils {
             }
         }
         catch(Exception ex){}
+    }
+
+    public static void connectToAPIAndGetJSON(ListRestaurantsActivity listAct, int option, String parameter){
+        // start parsing the JSON data
+        APIConnection apiConnection = new APIConnection(listAct, option, parameter);
+        apiConnection.execute();
+    }
+
+    public static void connectToAPIAndGetJSON( ViewRestaurantActivity viewAct, int option, String parameter){
+        // start parsing the JSON data
+        APIConnection apiConnection = new APIConnection(viewAct, option, parameter);
+        apiConnection.execute();
+    }
+
+    public static void connectToAPIAndGetJSON(ReviewListActivity reviewAct, int option, String parameter){
+        // start parsing the JSON data
+        APIConnection apiConnection = new APIConnection(reviewAct, option, parameter);
+        apiConnection.execute();
     }
 }

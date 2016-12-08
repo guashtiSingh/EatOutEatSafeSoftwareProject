@@ -2,9 +2,8 @@ package com.centennial.project.eatouteatsafe;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -17,8 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import com.centennial.project.eatouteatsafe.pojos.APIConnection;
 import com.centennial.project.eatouteatsafe.pojos.Restaurant;
+import com.centennial.project.eatouteatsafe.pojos.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,7 +40,7 @@ public class ViewRestaurantActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_restaurant);
         restaurant = (Restaurant) getIntent().getSerializableExtra("Restaurant");
         loadImages();
-        connectToAPIAndGetJSON();
+        Utils.connectToAPIAndGetJSON(this, 4, restaurant.get_id());
         checkAndUpdateAccountUI();
     }
 
@@ -69,11 +68,6 @@ public class ViewRestaurantActivity extends AppCompatActivity {
         titleSupplyBtn.setLayoutParams(dp);
     }
 
-    private void connectToAPIAndGetJSON(){
-        // start parsing the JSON data
-        APIConnection apiConnection = new APIConnection(this, 4, restaurant.get_id());
-        apiConnection.execute();
-    }
 
     public void populateFromJSON(String jsonString){
         try {
@@ -159,6 +153,13 @@ public class ViewRestaurantActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void onReviewBtnClick(View view)
+    {
+        Intent intent = new Intent(this, ReviewListActivity.class);
+        intent.putExtra("Restaurant",restaurant);
+        startActivity(intent);
     }
 
     public void onLoginBtnClick(View view){
