@@ -3,6 +3,7 @@ package com.centennial.project.eatouteatsafe.pojos;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.centennial.project.eatouteatsafe.ListRestaurantsActivity;
@@ -78,6 +79,8 @@ public class APIConnection extends AsyncTask<Void, Void, String> {
                     APIConnection.this.cancel(true);
                 }
             });
+        }else{
+            Log.d("EatoutApp_Warning","Progress Dialog is null");
         }
     }
 

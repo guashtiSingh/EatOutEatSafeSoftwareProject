@@ -50,7 +50,6 @@ public class ReviewListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("test2","reached4");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -103,12 +102,70 @@ public class ReviewListActivity extends AppCompatActivity {
     {
         //Review List
         expandableListView = (ExpandableListView) findViewById(R.id.reviewListView);
-
         Utils.connectToAPIAndGetJSON(reviewAct, 5, restaurant.get_id());
-        ReviewListAdapter reviewListAdapter = new ReviewListAdapter(this, reviews);
-        expandableListView.setAdapter(reviewListAdapter);
+    }
+
+
+    public void parseJSONtoReview(String jsonString, int OPTION){
+
+        try {
+            //Get the instance of JSONArray that contains JSONObjects
+
+            JSONObject jsonRootObject  = new JSONObject(jsonString);
+            JSONArray jsonArray = jsonRootObject.optJSONArray("reviews");
+            reviewThroughJSON(jsonArray);
+
+            Log.d("review is empty: ", ""+reviews.isEmpty());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        if(!reviews.isEmpty())
+            populateReviews(reviews);
+    }
+
+    public void reviewThroughJSON(JSONArray jsonArray) throws JSONException {
+
+        String data = "";
+        String url = "";
+        JSONObject jsonObject = null;
+        Review reviewObj = null;
+
+        //Iterate the jsonArray and create restaurant objects using JSON data
+        for(int i=0; i < jsonArray.length(); i++) {
+
+            jsonObject = jsonArray.getJSONObject(i);
+
+            if (jsonObject.has("RV_Id")) {
+                reviewObj = new Review();
+                reviewObj.setReview_Id(jsonObject.optString("RV_Id").toString());
+                reviewObj.setRes_Id(restaurant.get_id());
+                reviewObj.setAuthor_Id(jsonObject.optString("User_Id"));
+                reviewObj.setAuthor_name(jsonObject.optString("userFullName"));
+                reviewObj.setTitle(jsonObject.optString("RV_Title"));
+                reviewObj.setContent(jsonObject.optString("RV_Content"));
+                reviewObj.setRate(Float.parseFloat(jsonObject.has("Rate") ? jsonObject.optString("Rate") : "0"));
+
+                reviews.add(reviewObj);
+            }
+        }
+
+        Log.d("reviews size", ""+reviews.size());
 
     }
+
+    public void populateReviews(ArrayList<Review> reviews){
+        ReviewListAdapter reviewListAdapter = new ReviewListAdapter(this, reviews);
+        expandableListView.setAdapter(reviewListAdapter);
+    }
+
+    /** /////////////////////////////////////////////////////////////////////////
+     *  //// FUNCTIONS RELATED TO ADDING, UPDATING AND DELETING REVIEWS /////////
+     */ /////////////////////////////////////////////////////////////////////////
 
     //New dialog for insert review form
     private void populateDialog(View view)
@@ -163,8 +220,6 @@ public class ReviewListActivity extends AppCompatActivity {
                     params.put("mainImgName", "");
                     params.put("rate", "" + rating);
 
-                    Log.d("test2","reached2");
-
                     ReviewTask reviewTask = new ReviewTask(params);
                     reviewTask.execute((Void) null);
 
@@ -182,66 +237,17 @@ public class ReviewListActivity extends AppCompatActivity {
         builder.show();
     }
 
+    // to go back to restaurant details
     private void goBackReviewDetail(View view)
     {
         Intent intent = new Intent(ReviewListActivity.this, ViewRestaurantActivity.class);
         intent.putExtra("Restaurant", restaurant);
         startActivity(intent);
     }
-    public boolean parseJSONtoReview(String jsonString, int OPTION){
 
-        try {
-            //Get the instance of JSONArray that contains JSONOb
-            // jects
-            JSONObject jsonRootObject  = new JSONObject(jsonString);
-            JSONArray jsonArray = jsonRootObject.optJSONArray("reviews");
-
-            reviewThroughJSON(jsonArray);
-            //ReviewListAdapter reviewListAdapter = new ReviewListAdapter(this, reviews);
-
-
-
-            Log.d("review is empty: ", ""+reviews.isEmpty());
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        return reviews.isEmpty() ? true : false;
-    }
-
-    public void reviewThroughJSON(JSONArray jsonArray) throws JSONException {
-
-        String data = "";
-        String url = "";
-        JSONObject jsonObject = null;
-        Review reviewObj = null;
-
-        //Iterate the jsonArray and create restaurant objects using JSON data
-        for(int i=0; i < jsonArray.length(); i++) {
-
-            jsonObject = jsonArray.getJSONObject(i);
-
-            if (jsonObject.has("RV_Id")) {
-                reviewObj = new Review();
-                reviewObj.setReview_Id(jsonObject.optString("RV_Id").toString());
-                reviewObj.setRes_Id(restaurant.get_id());
-                reviewObj.setAuthor_Id(jsonObject.optString("User_Id"));
-                reviewObj.setAuthor_name(jsonObject.optString("userFullName"));
-                reviewObj.setTitle(jsonObject.optString("RV_Title"));
-                reviewObj.setContent(jsonObject.optString("RV_Content"));
-                reviewObj.setRate(Float.parseFloat(jsonObject.has("Rate") ? jsonObject.optString("Rate") : "0"));
-
-                reviews.add(reviewObj);
-            }
-        }
-
-        Log.d("reviews size", ""+reviews.size());
-
-    }
-
+    /**
+     *  API class for review manipulations
+     */
     public class ReviewTask extends AsyncTask<Void, Void, JSONObject> {
 
         protected String WEBSERVICE_REVIEW_INSERT = "http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com:8080/EOES-webService/review/insert";
@@ -253,28 +259,23 @@ public class ReviewListActivity extends AppCompatActivity {
 
         ReviewTask(HashMap<String, String> params) {
             this.parameters = params;
-            Log.d("test2","reached2");
 
         }
 
         @Override
         public JSONObject doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-            Log.d("test3","reached3");
 
             try {
 
                 JSONReviewParser parser = new JSONReviewParser();
                 String jsonString = "";
-                Log.d("test","reached");
                 if(parameters == null)
                     throw new IllegalArgumentException("Parameter is null");
                 else
                 {
-                    Log.d("params ", parameters.get("TaskMode").toUpperCase());
                     String MODE = parameters.get("TaskMode").toUpperCase();
                     parameters.remove("TaskMode");
-
 
 
                     switch (MODE) {
@@ -292,11 +293,7 @@ public class ReviewListActivity extends AppCompatActivity {
                             jsonString = parser.makeHttpRequest(WEBSERVICE_REVIEW_INSERT, "POST", parameters);
                             break;
                     }
-
-                    Log.d("Json ", jsonString);
-
                 }
-
 
                 return new JSONObject(jsonString);
 
@@ -313,9 +310,7 @@ public class ReviewListActivity extends AppCompatActivity {
 
             if(jsonObject.has("resultMsg") && jsonObject.optString("resultMsg").equalsIgnoreCase("success")){
 
-
                 //resetEpListView(reviewAct, "refresh");
-
                 Intent intent = new Intent(ReviewListActivity.this, ReviewListActivity.class);
                 intent.putExtra("Restaurant",restaurant);
                 startActivity(intent);

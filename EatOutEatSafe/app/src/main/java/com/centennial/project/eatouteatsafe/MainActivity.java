@@ -37,6 +37,12 @@ public class MainActivity extends AppCompatActivity {
         checkAndUpdateAccountUI();
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        checkAndUpdateAccountUI();
+    }
+
     // calling the list activity trans_in button click
     public void callListRestaurentActivity(View mainView){
         Intent listIntent = new Intent (this, ListRestaurantsActivity.class);
@@ -106,6 +112,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void onSignUpBtnClick(View view){
+        Intent intent = new Intent(MainActivity.this, SignupActivity.class);
+        startActivity(intent);
+    }
+
     /**
      * Updates the footer based on session
      */
@@ -117,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(sessionPreferences.getBoolean("isValidSession",false)){
             loginBtn.setText("Logout");
-            userName.setText(sessionPreferences.getString("FirstName","Invalid User"));
+            userName.setText(sessionPreferences.getString("FirstName","Invalid User").toUpperCase());
             signUp.setVisibility(View.INVISIBLE);
 
         }else {

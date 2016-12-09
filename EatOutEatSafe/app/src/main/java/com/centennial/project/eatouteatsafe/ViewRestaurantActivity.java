@@ -45,6 +45,12 @@ public class ViewRestaurantActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume(){
+        super.onResume();
+        checkAndUpdateAccountUI();
+    }
+
+    @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus == true) {
@@ -176,6 +182,12 @@ public class ViewRestaurantActivity extends AppCompatActivity {
         }
     }
 
+    public void onSignUpBtnClick(View view){
+        Intent intent = new Intent(ViewRestaurantActivity.this, SignupActivity.class);
+        startActivity(intent);
+    }
+
+
     /**
      * Updates the footer based on session
      */
@@ -187,7 +199,7 @@ public class ViewRestaurantActivity extends AppCompatActivity {
 
         if(sessionPreferences.getBoolean("isValidSession",false)){
             loginBtn.setText("Logout");
-            userName.setText(sessionPreferences.getString("FirstName","Invalid User"));
+            userName.setText(sessionPreferences.getString("FirstName","Invalid User").toUpperCase());
             signUp.setVisibility(View.INVISIBLE);
 
         }else {

@@ -68,7 +68,8 @@
             android:textColor="#ffffff"
             android:background="@android:color/holo_orange_light"
             android:layout_alignParentTop="true"
-            android:layout_toStartOf="@+id/loginBtnList" />
+            android:layout_toStartOf="@+id/loginBtnList"
+            android:onClick="onSignUpBtnClick"/>
 
         <Button
             android:layout_width="80dp"

@@ -42,6 +42,13 @@ public class ListRestaurantsActivity extends AppCompatActivity {
         checkAndUpdateAccountUI();
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        checkAndUpdateAccountUI();
+    }
+
+
     /**
      * Update the title of list activity
      * @param intent
@@ -79,6 +86,7 @@ public class ListRestaurantsActivity extends AppCompatActivity {
 
     /**
      * Connect to API and get JSON data
+     * /////// MOVED TO Utils Class
      */
 
 
@@ -328,6 +336,12 @@ public class ListRestaurantsActivity extends AppCompatActivity {
         }
     }
 
+    public void onSignUpBtnClick(View view){
+        Intent intent = new Intent(ListRestaurantsActivity.this, SignupActivity.class);
+        startActivity(intent);
+    }
+
+
     /**
      * Updates the footer based on session
      */
@@ -339,7 +353,7 @@ public class ListRestaurantsActivity extends AppCompatActivity {
 
         if(sessionPreferences.getBoolean("isValidSession",false)){
             loginBtn.setText("Logout");
-            userName.setText(sessionPreferences.getString("FirstName","Invalid User"));
+            userName.setText(sessionPreferences.getString("FirstName","Invalid User").toUpperCase());
             signUp.setVisibility(View.INVISIBLE);
 
         }else {

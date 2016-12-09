@@ -8,11 +8,12 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.centennial.project.eatouteatsafe.ReviewListActivity"
     tools:showIn="@layout/activity_review_list"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    android:orientation="vertical">
 
     <ExpandableListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="399dp"
         android:id="@+id/reviewListView"
         android:layout_marginTop="15dp"
         android:choiceMode="singleChoice"

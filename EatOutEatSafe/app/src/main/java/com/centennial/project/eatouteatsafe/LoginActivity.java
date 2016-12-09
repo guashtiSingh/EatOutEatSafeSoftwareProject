@@ -33,6 +33,8 @@ import android.widget.Toast;
 
 import com.centennial.project.eatouteatsafe.pojos.JSONParser;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -114,7 +116,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return true;
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mUsernameView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(mUsernameView, R.string.permission_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
@@ -188,11 +191,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
@@ -332,12 +330,33 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if(jsonObject.has("resultMsg") && jsonObject.optString("resultMsg").equalsIgnoreCase("success")){
                 sharedpreferences = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putBoolean("isValidSession", true);
-                editor.putString("Username","beymig");
-                editor.putString("FirstName","Anjith");
-                editor.putInt("UserId",2);
-                editor.commit();
+
+                JSONArray jsonArray = jsonObject.optJSONArray("user");
+                JSONObject jsonUserObj = null;
+                try {
+                    for(int i=0; i < jsonArray.length(); i++) {
+
+                            jsonUserObj = jsonArray.getJSONObject(i);
+
+                    }
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    if(jsonUserObj != null){
+                        editor.putBoolean("isValidSession", true);
+                        editor.putString("Username",mUsername);
+                        editor.putString("FirstName",jsonUserObj.getString("User_FirstName"));
+                        editor.putInt("UserId",Integer.parseInt(jsonUserObj.getString("UC_Id")));
+                        editor.commit();
+
+                    }else{
+                        editor.putBoolean("isValidSession", false);
+                        editor.putString("Username","Guest");
+                        editor.putString("FirstName","Guest");
+                        editor.putInt("UserId",0);
+                        editor.commit();
+                    }
+                }catch (JSONException jse){
+                    jse.printStackTrace();
+                }
                 finish();
                 Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                 startActivity(intent);

@@ -106,7 +106,8 @@
             android:textColor="#ffffff"
             android:background="@android:color/holo_orange_light"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:onClick="onSignUpBtnClick"/>
 
         <Button
             android:layout_width="80dp"

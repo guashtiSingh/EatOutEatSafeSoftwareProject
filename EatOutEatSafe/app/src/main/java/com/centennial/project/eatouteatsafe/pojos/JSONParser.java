@@ -46,8 +46,18 @@ public class JSONParser {
 
                    JSONObject cred = new JSONObject();
                    String[] userAndPass = params.get("loginCred");
-                   cred.put("userId",userAndPass[0]);
-                   cred.put("password", userAndPass[1]);
+                   String[] signUpDetails = params.get("SignUpCred");
+
+                   if(userAndPass != null) {
+                       cred.put("userId", userAndPass[0]);
+                       cred.put("password", userAndPass[1]);
+                   }else if(signUpDetails != null){
+                       cred.put("userId", signUpDetails[0]);
+                       cred.put("password", signUpDetails[1]);
+                       cred.put("firstName", signUpDetails[2]);
+                       cred.put("lastName", signUpDetails[3]);
+                       cred.put("email", signUpDetails[4]);
+                   }
 
                    conn.setDoOutput(true);
                    conn.setRequestProperty("Content-Type", "application/json");
@@ -71,6 +81,8 @@ public class JSONParser {
                 e.printStackTrace();
             }catch (JSONException jse){
                jse.printStackTrace();
+           }catch (Exception e){
+               e.printStackTrace();
            }
         }
         else if(method.equals("GET")){
