@@ -14,7 +14,7 @@ public class Review implements Serializable {
     private String author_name;
     private String title;
     private String content;
-    private Float rate;
+    private float rate;
 
     public String getAuthor_name() {
         return author_name;
@@ -64,7 +64,7 @@ public class Review implements Serializable {
         this.content = content;
     }
 
-    public void setRate(Float rate) {
+    public void setRate(float rate) {
         this.rate = rate;
     }
 

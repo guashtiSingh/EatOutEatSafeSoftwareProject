@@ -31,14 +31,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ReviewListActivity extends AppCompatActivity {
+public class ReviewListActivity extends AppCompatActivity implements ReviewListAdapter.AdapterCallback {
 
+    private ReviewListAdapter reviewAdapter;
     //For review list
     public ExpandableListView expandableListView;
     private ArrayList<Review> reviews;
-    private Review review;
+    public static Review review = new Review();
 
-    private Restaurant restaurant;
+    public static Restaurant restaurant;
 
     //for review insert
     public String reviewTitle = "";
@@ -46,10 +47,9 @@ public class ReviewListActivity extends AppCompatActivity {
     public float rating = 0.0f;
     public String userName = "";
     public ReviewListActivity reviewAct;
-    SharedPreferences sharedpreferences;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -59,6 +59,7 @@ public class ReviewListActivity extends AppCompatActivity {
         //Retrieve restaurant
         restaurant = (Restaurant) getIntent().getSerializableExtra("Restaurant");
 
+        this.reviewAdapter = new ReviewListAdapter(this, reviews);
 
         toolbar.setTitle(restaurant.getName());
         setSupportActionBar(toolbar);
@@ -80,7 +81,7 @@ public class ReviewListActivity extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    populateDialog(view);
+                    populateDialog(view, "INSERT");
                 }
             });
         }
@@ -168,10 +169,10 @@ public class ReviewListActivity extends AppCompatActivity {
      */ /////////////////////////////////////////////////////////////////////////
 
     //New dialog for insert review form
-    private void populateDialog(View view)
+    public void populateDialog(View view, final String taskMode)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-        builder.setTitle("Review Write");
+        builder.setTitle("REVIEW " + taskMode);
         // I'm using fragment here so I'm using getView() to provide ViewGroup
         // but you can provide here any other instance of ViewGroup from your Fragment / Activity
 
@@ -184,6 +185,19 @@ public class ReviewListActivity extends AppCompatActivity {
         builder.setView(viewInflated);
 
         final Context context = view.getContext();
+
+        Log.d("taskMode: ", taskMode);
+
+        if(taskMode.equals("UPDATE"))
+        {
+            Log.d("Checked update: ", taskMode);
+            //Log.d("Title in Activity: ", review.getTitle());
+            if(review != null) {
+                txtTitle.setText(review.getTitle());
+                txtContent.setText(review.getContent());
+                ratingBar.setRating(review.getRate());
+            }
+        }
 
         // Set up the buttons
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -211,7 +225,7 @@ public class ReviewListActivity extends AppCompatActivity {
                 {
                     HashMap<String, String> params = new HashMap<>();
 
-                    params.put("TaskMode", "Insert");
+                    params.put("TaskMode", taskMode);
                     params.put("resId", restaurant.get_id());
                     params.put("reviewTitle", reviewTitle);
                     params.put("reviewContent", reviewContent);
@@ -219,6 +233,11 @@ public class ReviewListActivity extends AppCompatActivity {
                     params.put("mainImgPath", "");
                     params.put("mainImgName", "");
                     params.put("rate", "" + rating);
+
+                    if(taskMode.equals("UPDATE") || taskMode.equals("DELETE"))
+                    {
+                        params.put("reviewId", "" + review.getReview_Id());
+                    }
 
                     ReviewTask reviewTask = new ReviewTask(params);
                     reviewTask.execute((Void) null);
@@ -243,6 +262,26 @@ public class ReviewListActivity extends AppCompatActivity {
         Intent intent = new Intent(ReviewListActivity.this, ViewRestaurantActivity.class);
         intent.putExtra("Restaurant", restaurant);
         startActivity(intent);
+    }
+
+    @Override
+    public void onMethodCallback(View view, String taskMode) {
+
+        if(taskMode.equals("UPDATE") || taskMode.equals("INSERT"))
+        {
+            populateDialog(view, taskMode);
+        }
+        else if(taskMode.equals("DELETE"))
+        {
+            HashMap<String, String> params = new HashMap<>();
+
+            params.put("TaskMode", taskMode);
+            params.put("userId", ""+ userName);
+            params.put("reviewId", "" + review.getReview_Id());
+
+            ReviewTask reviewTask = new ReviewTask(params);
+            reviewTask.execute((Void) null);
+        }
     }
 
     /**
@@ -277,17 +316,17 @@ public class ReviewListActivity extends AppCompatActivity {
                     String MODE = parameters.get("TaskMode").toUpperCase();
                     parameters.remove("TaskMode");
 
-
+                    Log.d("Mode: ", MODE);
                     switch (MODE) {
                         
                         case "INSERT":
                             jsonString = parser.makeHttpRequest(WEBSERVICE_REVIEW_INSERT, "POST", parameters);
                             break;
                         case "UPDATE":
-                            jsonString = parser.makeHttpRequest(WEBSERVICE_REVIEW_UPDATE, "PUT", parameters);
+                            jsonString = parser.makeHttpRequest(WEBSERVICE_REVIEW_UPDATE, "POST", parameters);
                             break;
                         case "DELETE":
-                            jsonString = parser.makeHttpRequest(WEBSERVICE_REVIEW_DELETE, "DELETE", parameters);
+                            jsonString = parser.makeHttpRequest(WEBSERVICE_REVIEW_DELETE, "POST", parameters);
                             break;
                         default:
                             jsonString = parser.makeHttpRequest(WEBSERVICE_REVIEW_INSERT, "POST", parameters);
@@ -311,7 +350,7 @@ public class ReviewListActivity extends AppCompatActivity {
             if(jsonObject.has("resultMsg") && jsonObject.optString("resultMsg").equalsIgnoreCase("success")){
 
                 //resetEpListView(reviewAct, "refresh");
-                Intent intent = new Intent(ReviewListActivity.this, ReviewListActivity.class);
+                Intent intent = new Intent(reviewAct, ReviewListActivity.class);
                 intent.putExtra("Restaurant",restaurant);
                 startActivity(intent);
 
