@@ -38,12 +38,15 @@
         android:layout_height="wrap_content"
         android:text="Search"
         android:id="@+id/searhBtn"
-        android:layout_alignTop="@+id/searchEdit"
         android:background="#3e85f6"
-        android:layout_alignBottom="@+id/searchEdit"
         android:layout_alignEnd="@+id/headingImgView"
         android:layout_toEndOf="@+id/searchEdit"
-        android:onClick="callListRestaurentActivity"/>
+        android:onClick="callListRestaurentActivity"
+        android:padding="2dp"
+        android:layout_alignTop="@+id/searchEdit"
+        android:layout_alignBottom="@+id/searchEdit"
+        tools:textColor="#ffffff"
+        android:textColor="#ffffff" />
 
     <Button
         android:layout_width="wrap_content"

@@ -2,6 +2,7 @@ package com.centennial.project.eatouteatsafe;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -31,6 +32,12 @@ public class ListRestaurantsActivity extends AppCompatActivity {
     private ArrayList<Restaurant> restaurantList = null;
     private int option = 0;
     private String searchString = "";
+    private Typeface itemHead = null;
+    private Typeface itemDesc = null;
+    private Typeface itemRating = null;
+
+
+
 
 
     @Override
@@ -246,6 +253,9 @@ public class ListRestaurantsActivity extends AppCompatActivity {
         public RestaurantListAdapter(){
             super(ListRestaurantsActivity.this,R.layout.list_item_view, restaurantList);
             itemImageLoader = new ImageLoader(ListRestaurantsActivity.this.getApplicationContext());
+            itemHead = Typeface.createFromAsset(getAssets(), "fonts/Chunkfive.otf");
+            itemDesc = Typeface.createFromAsset(getAssets(), "fonts/Aller_Rg.ttf");
+            itemRating = Typeface.createFromAsset(getAssets(), "fonts/JosefinSans-Bold.ttf");
         }
 
         @Override
@@ -255,6 +265,7 @@ public class ListRestaurantsActivity extends AppCompatActivity {
             String trimmedDescp = null;
             if(itemView == null){
                 itemView = getLayoutInflater().inflate(R.layout.list_item_view,parent,false);
+
             }
 
             // get restaurant at a particular position
@@ -268,14 +279,17 @@ public class ListRestaurantsActivity extends AppCompatActivity {
             ImageView resImgView = (ImageView) itemView.findViewById(R.id.itemImage);
             RatingBar ratingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
 
+            nameTxtView.setTypeface(itemHead);
             nameTxtView.setText(currentRestaurant.getName());
             itemImageLoader.DisplayImage(currentRestaurant.getImageURL(),resImgView);
             ratingBar.setRating(currentRestaurant.getRating());
             ratingBar.setEnabled(false);
+            reviewTxtView.setTypeface(itemDesc);
             reviewTxtView.setText(currentRestaurant.getReviews() + " Reviews");
 
             // trim description when length greater than 50
             trimmedDescp = currentRestaurant.getDescritpion();
+            descTxtView.setTypeface(itemDesc);
             if(trimmedDescp.length() >= 50) {
                 descTxtView.setText(currentRestaurant.getDescritpion().substring(0, 50) + "......");
             }else{

@@ -134,7 +134,8 @@
                     android:ellipsize="end"
                     android:padding="10dp"
                     android:layout_below="@+id/scrollView"
-                    android:layout_alignParentStart="true" />
+                    android:layout_alignParentStart="true"
+                    android:onClick="onMenuBtnClick"/>
 
 
                 <Button

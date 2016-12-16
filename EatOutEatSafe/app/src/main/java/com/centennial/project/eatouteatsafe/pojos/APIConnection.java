@@ -29,14 +29,14 @@ public class APIConnection extends AsyncTask<Void, Void, String> {
     private ReviewListActivity reviewList = null;
 
     private String[] credentials = null;
+    // Restaurant List
     protected String WEBSERVICE_URL_POPULAR = "http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com:8080/EOES-webService/restaurant/list/P";
     protected String WEBSERVICE_URL_LOCATION = "http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com:8080/EOES-webService/restaurant/list/L";
     protected String WEBSERVICE_URL_ALLERGY = "http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com:8080/EOES-webService/restaurant/list/A";
     protected String WEBSERVICE_URL_SEARCH = "http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com:8080/EOES-webService/restaurant/list/M/";
     protected String WEBSERVICE_URL_RESTAURANT = "http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com:8080//EOES-webService/restaurant/resDetail/";
-    //user webservice links
-    protected String WEBSERVICE_URL_LOGIN = "http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com:8080/EOES-webService/user/login";
-    protected String WEBSERVICE_URL_SIGNUP = "http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com:8080/EOES-webService/user/signup";
+    // Menu
+    protected String WEBSERVICE_URL_MENU = " http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com:8080/EOES-webService/menu/list/";
     //Review
     protected String WEBSERVICE_REVIEW_LIST = "http://ec2-54-218-26-177.us-west-2.compute.amazonaws.com:8080/EOES-webService/review/list/";
 
@@ -114,6 +114,9 @@ public class APIConnection extends AsyncTask<Void, Void, String> {
             case 5:
                 jsonString = jsonParserObj.makeHttpRequest(WEBSERVICE_REVIEW_LIST+resId,"GET",null);
                 break;
+            case 6:
+                jsonString = jsonParserObj.makeHttpRequest(WEBSERVICE_URL_MENU+resId,"GET",null);
+                break;
             default:
                 jsonString = jsonParserObj.makeHttpRequest(WEBSERVICE_URL_POPULAR,"GET",null);
                 break;
@@ -131,6 +134,8 @@ public class APIConnection extends AsyncTask<Void, Void, String> {
             viewRest.populateFromJSON(jsonString);
         }else if(OPTION == 5){
             reviewList.parseJSONtoReview(jsonString, OPTION);
+        }else if(OPTION == 6){
+            viewRest.createAndShowMenu(jsonString, viewRest);
         }
 
         if(progressDialog != null)

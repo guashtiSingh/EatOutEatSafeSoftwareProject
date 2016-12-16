@@ -1,9 +1,16 @@
 package com.centennial.project.eatouteatsafe;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -11,17 +18,23 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.centennial.project.eatouteatsafe.pojos.ImageLoader;
+import com.centennial.project.eatouteatsafe.pojos.Menu;
 import com.centennial.project.eatouteatsafe.pojos.Restaurant;
 import com.centennial.project.eatouteatsafe.pojos.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class ViewRestaurantActivity extends AppCompatActivity {
 
@@ -161,6 +174,13 @@ public class ViewRestaurantActivity extends AppCompatActivity {
         });
     }
 
+
+    public void onMenuBtnClick(View view){
+
+        Utils.connectToAPIAndGetJSON(this,6,restaurant.get_id());
+    }
+
+
     public void onReviewBtnClick(View view)
     {
         Intent intent = new Intent(this, ReviewListActivity.class);
@@ -207,5 +227,162 @@ public class ViewRestaurantActivity extends AppCompatActivity {
             userName.setText("Guest");
             signUp.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void createAndShowMenu(String menuJson, ViewRestaurantActivity act){
+
+        boolean isSafeToLaunchDialog = false;
+        ArrayList<Menu> menuList = null;
+
+        try {
+            menuList = parseMenuJson(menuJson);
+            isSafeToLaunchDialog = true;
+        }catch (JSONException jse){
+            jse.printStackTrace();
+            Toast.makeText(act,"Menu error",Toast.LENGTH_SHORT).show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if (isSafeToLaunchDialog && menuList != null) {
+                // creating alert dialog box and creating parent layout
+                AlertDialog.Builder builder = new AlertDialog.Builder(act);
+                LinearLayout menuParentLayout = new LinearLayout(act);
+                menuParentLayout.setOrientation(LinearLayout.VERTICAL);
+                LinearLayout.LayoutParams parantParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                menuParentLayout.setLayoutParams(parantParams);
+
+                // creating child layout one
+                LinearLayout headingLayout = new LinearLayout(act);
+                LinearLayout.LayoutParams headParms = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                headingLayout.setLayoutParams(headParms);
+                headingLayout.setGravity(Gravity.CLIP_VERTICAL);
+                headingLayout.setPadding(10, 10, 10, 10);
+
+                Typeface headTypeFace = Typeface.createFromAsset(act.getAssets(), "fonts/Chunkfive.otf");
+                TextView titleText = new TextView(act);
+                titleText.setText((restaurant != null ? restaurant.getName() : "") + " Menu");
+                titleText.setPadding(8, 8, 8, 8);
+                titleText.setGravity(Gravity.CENTER);
+                titleText.setTextSize(20);
+                titleText.setBackgroundColor(Color.RED);
+                titleText.setTextColor(Color.WHITE);
+                titleText.setTypeface(headTypeFace);
+                headingLayout.addView(titleText);
+
+
+                // creating child layout two as scroll view
+                ScrollView sv = new ScrollView(act);
+                sv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT));
+
+                // creating sub child for scroll view to show the menu details
+                LinearLayout layout = new LinearLayout(act);
+                LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                layout.setOrientation(LinearLayout.VERTICAL);
+                layout.setLayoutParams(parms);
+
+                layout.setGravity(Gravity.CLIP_VERTICAL);
+                layout.setPadding(10, 10, 10, 10);
+
+                // Load fonts before showing text views
+
+                Typeface titleTypeFace = Typeface.createFromAsset(act.getAssets(), "fonts/JosefinSans-Bold.ttf");
+                Typeface subtitleTypeFace =
+                        Typeface.createFromAsset(act.getAssets(), "fonts/JosefinSans-SemiBoldItalic.ttf");
+                Typeface detailTypeFace = Typeface.createFromAsset(act.getAssets(), "fonts/Quicksand-Bold.otf");
+
+                // Create image loader for images and get ready to load images
+                ImageLoader itemImageLoader = new ImageLoader(act.getApplicationContext());
+
+
+                for(Menu item:menuList) {
+                    TextView nameText = new TextView(act);
+                    nameText.setText(item.getName());
+                    nameText.setPadding(8, 8, 8, 8);
+                    nameText.setGravity(Gravity.LEFT);
+                    nameText.setTextSize(20);
+                    nameText.setTypeface(titleTypeFace);
+                    layout.addView(nameText);
+
+                    ImageView menuImage = new ImageView(act);
+                    menuImage.setLayoutParams(new ViewGroup.LayoutParams(250, 250));
+                    layout.addView(menuImage);
+                    itemImageLoader.DisplayImage(item.getImageURL(), menuImage);
+
+                    TextView descText = new TextView(act);
+                    descText.setText(item.getDescription());
+                    descText.setPadding(8, 8, 8, 8);
+                    descText.setGravity(Gravity.LEFT);
+                    descText.setTextSize(12);
+                    descText.setTypeface(subtitleTypeFace);
+                    layout.addView(descText);
+
+                    TextView costText = new TextView(act);
+                    costText.setText("CAD "+ item.getPrice()+"$");
+                    costText.setPadding(8, 8, 8, 8);
+                    costText.setGravity(Gravity.RIGHT);
+                    costText.setTextSize(12);
+                    costText.setTypeface(detailTypeFace);
+                    layout.addView(costText);
+
+
+                    View hzLine = new View(act);
+                    hzLine.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1));
+                    hzLine.setBackgroundColor(Color.GRAY);
+                    hzLine.setPadding(4, 4, 4, 4);
+                    layout.addView(hzLine);
+                }
+                sv.addView(layout); // adding the sub-child linear layout to scroll view
+
+                // adding all child layouts to parent linear layout
+                menuParentLayout.addView(headingLayout);
+                menuParentLayout.addView(sv);
+
+                // adding parent layout to alert dialog
+                builder.setView(menuParentLayout);
+                builder.setNegativeButton("GO BACK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+            }
+        }
+    }
+
+    private ArrayList<Menu> parseMenuJson(String jsonString) throws JSONException{
+
+        if(jsonString != null && jsonString.length() > 0){
+            JSONObject jsonRootObject  = new JSONObject(jsonString);
+            JSONArray jsonArray = jsonRootObject.optJSONArray("menus");
+            ArrayList<Menu> menuList =  new ArrayList<Menu>();
+            JSONObject jsonObject = null;
+            String url = "";
+
+            for(int i=0; i < jsonArray.length(); i++) {
+                Menu resMenuItem = new Menu();
+                jsonObject = jsonArray.getJSONObject(i);
+                resMenuItem.setName(jsonObject.has("Menu_Name") ?
+                        jsonObject.optString("Menu_Name").toString() : "Untitled");
+                resMenuItem.setPrice(jsonObject.has("Menu_Price") ?
+                        jsonObject.optString("Menu_Price").toString(): "0");
+                resMenuItem.setDescription(jsonObject.has("Menu_Description") ?
+                        jsonObject.optString("Menu_Description").toString() : "No Description");
+                url = jsonObject.optString("MainImg_Path").toString() +
+                        jsonObject.optString("MainImg_Name").toString();
+                resMenuItem.setImageURL(url);
+                menuList.add(resMenuItem);
+            }
+
+            return menuList;
+        }
+
+        return null;
+
     }
 }
